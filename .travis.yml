@@ -17,5 +17,5 @@ before_install:
   fi
 
 script:
-- fgt golint $(find . | grep .go$ | grep -v keystorebackup.pb.go)
-- $HOME/gopath/bin/goveralls -service=travis-ci -ignore=keystorebackup.go -package github.com/brotherlogic/keystorebackup
+- fgt golint $(find . | grep .go$ | grep -v recordadder.pb.go)
+- $HOME/gopath/bin/goveralls -service=travis-ci -ignore=recordadder.go -package github.com/brotherlogic/recordadder
