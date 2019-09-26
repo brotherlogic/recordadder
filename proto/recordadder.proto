@@ -2,11 +2,8 @@ syntax = "proto3";
 
 package recordadder;
 
-import "github.com/brotherlogic/godiscogs/godiscogs.proto";
-
-message Config {
-  repeated godiscogs.Release queue = 1;
-  int64 last_addition = 2;
+message Queue {
+  repeated AddRecordRequest requests = 1;
 }
 
 message AddRecordRequest {
@@ -19,6 +16,6 @@ message AddRecordResponse {
   int64 expected_addition_date = 1;
 }
 
-service WantService {
+service AddRecordService {
   rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {};
 }
