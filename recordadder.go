@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"time"
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/keystore/client"
@@ -53,6 +54,11 @@ func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{}
 }
 
+func (s *Server) runTimedTask(ctx context.Context) (time.Time, error) {
+	s.Log("Running the timed task")
+	return time.Now().Add(time.Minute), nil
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	var init = flag.Bool("init", false, "Prep server")
@@ -72,6 +78,8 @@ func main() {
 	if *init {
 		return
 	}
+
+	server.RegisterLockingTask(server.runTimedTask, "run_timed_task")
 
 	fmt.Printf("%v", server.Serve())
 }
