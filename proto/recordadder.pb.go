@@ -5,7 +5,6 @@ package recordadder
 
 import (
 	fmt "fmt"
-	godiscogs "github.com/brotherlogic/godiscogs"
 	proto "github.com/golang/protobuf/proto"
 	context "golang.org/x/net/context"
 	grpc "google.golang.org/grpc"
@@ -23,51 +22,43 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type Config struct {
-	Queue                []*godiscogs.Release `protobuf:"bytes,1,rep,name=queue,proto3" json:"queue,omitempty"`
-	LastAddition         int64                `protobuf:"varint,2,opt,name=last_addition,json=lastAddition,proto3" json:"last_addition,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+type Queue struct {
+	Requests             []*AddRecordRequest `protobuf:"bytes,1,rep,name=requests,proto3" json:"requests,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *Config) Reset()         { *m = Config{} }
-func (m *Config) String() string { return proto.CompactTextString(m) }
-func (*Config) ProtoMessage()    {}
-func (*Config) Descriptor() ([]byte, []int) {
+func (m *Queue) Reset()         { *m = Queue{} }
+func (m *Queue) String() string { return proto.CompactTextString(m) }
+func (*Queue) ProtoMessage()    {}
+func (*Queue) Descriptor() ([]byte, []int) {
 	return fileDescriptor_365a0310624e2f56, []int{0}
 }
 
-func (m *Config) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Config.Unmarshal(m, b)
+func (m *Queue) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Queue.Unmarshal(m, b)
 }
-func (m *Config) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Config.Marshal(b, m, deterministic)
+func (m *Queue) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Queue.Marshal(b, m, deterministic)
 }
-func (m *Config) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Config.Merge(m, src)
+func (m *Queue) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Queue.Merge(m, src)
 }
-func (m *Config) XXX_Size() int {
-	return xxx_messageInfo_Config.Size(m)
+func (m *Queue) XXX_Size() int {
+	return xxx_messageInfo_Queue.Size(m)
 }
-func (m *Config) XXX_DiscardUnknown() {
-	xxx_messageInfo_Config.DiscardUnknown(m)
+func (m *Queue) XXX_DiscardUnknown() {
+	xxx_messageInfo_Queue.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Config proto.InternalMessageInfo
+var xxx_messageInfo_Queue proto.InternalMessageInfo
 
-func (m *Config) GetQueue() []*godiscogs.Release {
+func (m *Queue) GetRequests() []*AddRecordRequest {
 	if m != nil {
-		return m.Queue
+		return m.Requests
 	}
 	return nil
-}
-
-func (m *Config) GetLastAddition() int64 {
-	if m != nil {
-		return m.LastAddition
-	}
-	return 0
 }
 
 type AddRecordRequest struct {
@@ -165,7 +156,7 @@ func (m *AddRecordResponse) GetExpectedAdditionDate() int64 {
 }
 
 func init() {
-	proto.RegisterType((*Config)(nil), "recordadder.Config")
+	proto.RegisterType((*Queue)(nil), "recordadder.Queue")
 	proto.RegisterType((*AddRecordRequest)(nil), "recordadder.AddRecordRequest")
 	proto.RegisterType((*AddRecordResponse)(nil), "recordadder.AddRecordResponse")
 }
@@ -173,25 +164,22 @@ func init() {
 func init() { proto.RegisterFile("recordadder.proto", fileDescriptor_365a0310624e2f56) }
 
 var fileDescriptor_365a0310624e2f56 = []byte{
-	// 285 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x90, 0xcd, 0x4a, 0xc3, 0x40,
-	0x10, 0x80, 0x4d, 0x63, 0x0b, 0x4e, 0x55, 0xec, 0x22, 0x25, 0x14, 0x94, 0x12, 0x2f, 0x39, 0xa5,
-	0x58, 0x7d, 0x81, 0xa2, 0x17, 0x41, 0x3c, 0xac, 0x87, 0x1e, 0x3c, 0x94, 0xed, 0xce, 0x34, 0x5d,
-	0x88, 0x99, 0x76, 0x77, 0x23, 0x3e, 0xbe, 0xb8, 0xe9, 0x4f, 0x10, 0xbc, 0xcd, 0x7e, 0xf3, 0xb3,
-	0xdf, 0x0c, 0x0c, 0x2c, 0x69, 0xb6, 0xa8, 0x10, 0xc9, 0xe6, 0x1b, 0xcb, 0x9e, 0x45, 0xbf, 0x85,
-	0x46, 0xf7, 0x85, 0xf1, 0xeb, 0x7a, 0x99, 0x6b, 0xfe, 0x9c, 0x2c, 0x2d, 0xfb, 0x35, 0xd9, 0x92,
-	0x0b, 0xa3, 0x27, 0x05, 0xa3, 0x71, 0x9a, 0x0b, 0x77, 0x8c, 0x9a, 0xfe, 0x74, 0x0e, 0xbd, 0x27,
-	0xae, 0x56, 0xa6, 0x10, 0x19, 0x74, 0xb7, 0x35, 0xd5, 0x94, 0x44, 0xe3, 0x38, 0xeb, 0x4f, 0x45,
-	0x7e, 0x2c, 0x95, 0x54, 0x92, 0x72, 0x24, 0x9b, 0x02, 0x71, 0x07, 0x17, 0xa5, 0x72, 0x7e, 0xa1,
-	0x10, 0x8d, 0x37, 0x5c, 0x25, 0x9d, 0x71, 0x94, 0xc5, 0xf2, 0xfc, 0x17, 0xce, 0x76, 0x2c, 0x7d,
-	0x83, 0xab, 0x19, 0xa2, 0x0c, 0x76, 0x92, 0xb6, 0x35, 0x39, 0x2f, 0x2e, 0xa1, 0x63, 0x30, 0x89,
-	0xc6, 0x51, 0xd6, 0x95, 0x1d, 0x83, 0x42, 0xc0, 0xa9, 0x66, 0xe7, 0x43, 0x7f, 0x57, 0x86, 0x58,
-	0x0c, 0xa1, 0xb7, 0xe2, 0x12, 0xc9, 0x26, 0x71, 0xa0, 0xbb, 0x57, 0xfa, 0x02, 0x83, 0xd6, 0x3c,
-	0xb7, 0xe1, 0xca, 0x91, 0x78, 0x84, 0x21, 0x7d, 0x6f, 0x48, 0x7b, 0xc2, 0x83, 0xcd, 0x02, 0x95,
-	0xa7, 0xf0, 0x49, 0x2c, 0xaf, 0xf7, 0xd9, 0xbd, 0xd6, 0xb3, 0xf2, 0x34, 0xfd, 0x80, 0xfe, 0x5c,
-	0x55, 0xfe, 0x9d, 0xec, 0x97, 0xd1, 0x24, 0x5e, 0xe1, 0xec, 0x30, 0x59, 0xdc, 0xe4, 0xed, 0x1b,
-	0xff, 0xdd, 0x60, 0x74, 0xfb, 0x5f, 0xba, 0x11, 0x4a, 0x4f, 0x96, 0xbd, 0x70, 0xd7, 0x87, 0x9f,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0x14, 0x27, 0x00, 0x02, 0xac, 0x01, 0x00, 0x00,
+	// 225 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x90, 0xc1, 0x4a, 0xc4, 0x30,
+	0x10, 0x86, 0x6d, 0xeb, 0x2e, 0x3a, 0x0b, 0xe2, 0x0e, 0xb2, 0x04, 0x41, 0x59, 0x72, 0xda, 0xd3,
+	0x1e, 0xaa, 0x17, 0x8f, 0x15, 0x2f, 0x82, 0x08, 0xc6, 0x07, 0xa8, 0x31, 0x33, 0x42, 0x40, 0x9a,
+	0x9a, 0xa4, 0xe2, 0xe3, 0x0b, 0x69, 0x2d, 0x41, 0xd0, 0x5b, 0xe6, 0xfb, 0xfe, 0x24, 0x7f, 0x02,
+	0x6b, 0xcf, 0xc6, 0x79, 0xd2, 0x44, 0xec, 0xf7, 0xbd, 0x77, 0xd1, 0xe1, 0x2a, 0x43, 0xf2, 0x16,
+	0x16, 0x4f, 0x03, 0x0f, 0x8c, 0x37, 0x70, 0xe4, 0xf9, 0x63, 0xe0, 0x10, 0x83, 0x28, 0xb6, 0xd5,
+	0x6e, 0x55, 0x5f, 0xec, 0xf3, 0xbd, 0x0d, 0x91, 0x4a, 0xa3, 0x1a, 0x53, 0x6a, 0x8e, 0xcb, 0x47,
+	0x38, 0xfd, 0x6d, 0xf1, 0x04, 0x4a, 0x4b, 0xa2, 0xd8, 0x16, 0xbb, 0x85, 0x2a, 0x2d, 0x21, 0xc2,
+	0xa1, 0x71, 0x21, 0x8a, 0x32, 0x91, 0xb4, 0xc6, 0x0d, 0x2c, 0xdf, 0xdc, 0x3b, 0xb1, 0x17, 0x55,
+	0xa2, 0xd3, 0x24, 0xef, 0x61, 0x9d, 0x9d, 0x17, 0x7a, 0xd7, 0x05, 0xc6, 0x6b, 0xd8, 0xf0, 0x57,
+	0xcf, 0x26, 0x32, 0xb5, 0x9a, 0xc8, 0x46, 0xeb, 0xba, 0x96, 0x74, 0xe4, 0x74, 0x49, 0xa5, 0xce,
+	0x7e, 0x6c, 0x33, 0xc9, 0x3b, 0x1d, 0xb9, 0x7e, 0xc9, 0xaa, 0x3d, 0xb3, 0xff, 0xb4, 0x86, 0xf1,
+	0x01, 0x8e, 0x67, 0x86, 0xff, 0x3f, 0xf2, 0xfc, 0xf2, 0x2f, 0x3d, 0xb6, 0x92, 0x07, 0xaf, 0xcb,
+	0xf4, 0xa9, 0x57, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x20, 0xdb, 0x2f, 0x13, 0x69, 0x01, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -202,64 +190,64 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// WantServiceClient is the client API for WantService service.
+// AddRecordServiceClient is the client API for AddRecordService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type WantServiceClient interface {
+type AddRecordServiceClient interface {
 	AddRecord(ctx context.Context, in *AddRecordRequest, opts ...grpc.CallOption) (*AddRecordResponse, error)
 }
 
-type wantServiceClient struct {
+type addRecordServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewWantServiceClient(cc *grpc.ClientConn) WantServiceClient {
-	return &wantServiceClient{cc}
+func NewAddRecordServiceClient(cc *grpc.ClientConn) AddRecordServiceClient {
+	return &addRecordServiceClient{cc}
 }
 
-func (c *wantServiceClient) AddRecord(ctx context.Context, in *AddRecordRequest, opts ...grpc.CallOption) (*AddRecordResponse, error) {
+func (c *addRecordServiceClient) AddRecord(ctx context.Context, in *AddRecordRequest, opts ...grpc.CallOption) (*AddRecordResponse, error) {
 	out := new(AddRecordResponse)
-	err := c.cc.Invoke(ctx, "/recordadder.WantService/AddRecord", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/recordadder.AddRecordService/AddRecord", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// WantServiceServer is the server API for WantService service.
-type WantServiceServer interface {
+// AddRecordServiceServer is the server API for AddRecordService service.
+type AddRecordServiceServer interface {
 	AddRecord(context.Context, *AddRecordRequest) (*AddRecordResponse, error)
 }
 
-func RegisterWantServiceServer(s *grpc.Server, srv WantServiceServer) {
-	s.RegisterService(&_WantService_serviceDesc, srv)
+func RegisterAddRecordServiceServer(s *grpc.Server, srv AddRecordServiceServer) {
+	s.RegisterService(&_AddRecordService_serviceDesc, srv)
 }
 
-func _WantService_AddRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AddRecordService_AddRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddRecordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WantServiceServer).AddRecord(ctx, in)
+		return srv.(AddRecordServiceServer).AddRecord(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/recordadder.WantService/AddRecord",
+		FullMethod: "/recordadder.AddRecordService/AddRecord",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WantServiceServer).AddRecord(ctx, req.(*AddRecordRequest))
+		return srv.(AddRecordServiceServer).AddRecord(ctx, req.(*AddRecordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _WantService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "recordadder.WantService",
-	HandlerType: (*WantServiceServer)(nil),
+var _AddRecordService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "recordadder.AddRecordService",
+	HandlerType: (*AddRecordServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "AddRecord",
-			Handler:    _WantService_AddRecord_Handler,
+			Handler:    _AddRecordService_AddRecord_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
