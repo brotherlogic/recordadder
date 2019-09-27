@@ -4,3 +4,4 @@ recordadder
 
 testing
 *.backup
+recordadder_cli/recordadder_cli
