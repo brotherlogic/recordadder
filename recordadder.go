@@ -12,13 +12,39 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
+	pbgd "github.com/brotherlogic/godiscogs"
 	pbg "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/recordadder/proto"
+	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
+
+type collection interface {
+	addRecord(ctx context.Context, r *pb.AddRecordRequest) error
+}
+
+type prodCollection struct {
+	dial func(server string) (*grpc.ClientConn, error)
+}
+
+func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) error {
+	conn, err := p.dial("recordcollection")
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	_, err = client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
+		Release:  &pbgd.Release{Id: r.Id},
+		Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder},
+	}})
+	return err
+}
 
 //Server main server type
 type Server struct {
 	*goserver.GoServer
+	rc collection
 }
 
 // Init builds the server
@@ -26,6 +52,7 @@ func Init() *Server {
 	s := &Server{
 		GoServer: &goserver.GoServer{},
 	}
+	s.rc = &prodCollection{dial: s.DialMaster}
 	return s
 }
 
