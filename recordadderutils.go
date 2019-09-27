@@ -10,7 +10,7 @@ import (
 func (s *Server) processQueue(ctx context.Context) error {
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
-		return err
+		return fmt.Errorf("Error reading queue: %v", err)
 	}
 	queue := data.(*pb.Queue)
 
@@ -18,7 +18,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		queueSize := len(queue.Requests)
 		err = s.rc.addRecord(ctx, queue.Requests[0])
 		if err != nil {
-			return err
+			return fmt.Errorf("Error adding record: %v", err)
 		}
 		queue.Requests = queue.Requests[1:]
 		err = s.KSclient.Save(ctx, QUEUE, queue)
