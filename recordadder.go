@@ -14,6 +14,7 @@ import (
 
 	pbgd "github.com/brotherlogic/godiscogs"
 	pbg "github.com/brotherlogic/goserver/proto"
+	"github.com/brotherlogic/goserver/utils"
 	pb "github.com/brotherlogic/recordadder/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
@@ -105,6 +106,11 @@ func main() {
 	server.RegisterServer("recordadder", false)
 
 	if *init {
+		ctx, cancel := utils.BuildContext("recordadder", "recordadder")
+		defer cancel()
+
+		err := server.KSclient.Save(ctx, QUEUE, &pb.Queue{ProcessedRecords: 1})
+		fmt.Printf("Initialised: %v\n", err)
 		return
 	}
 

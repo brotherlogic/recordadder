@@ -4,6 +4,7 @@ package recordadder;
 
 message Queue {
   repeated AddRecordRequest requests = 1;
+  int32 processed_records = 2;
 }
 
 message AddRecordRequest {
