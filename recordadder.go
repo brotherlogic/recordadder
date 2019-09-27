@@ -83,10 +83,10 @@ func (s *Server) GetState() []*pbg.State {
 }
 
 func (s *Server) runTimedTask(ctx context.Context) (time.Time, error) {
-	s.Log("Running the timed task")
+	err := s.processQueue(ctx)
 
 	// Wait 24 hours between additions
-	return time.Now().Add(time.Minute * 5), nil
+	return time.Now().Add(time.Minute * 5), err
 }
 
 func main() {
