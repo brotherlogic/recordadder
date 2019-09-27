@@ -14,15 +14,15 @@ func (s *Server) processQueue(ctx context.Context) error {
 	}
 	queue := data.(*pb.Queue)
 
-	s.Log(fmt.Sprintf("Running the queue (%v)", len(queue.Requests)))
-
 	if len(queue.Requests) > 0 {
+		queueSize := len(queue.Requests)
 		err = s.rc.addRecord(ctx, queue.Requests[0])
 		if err != nil {
 			return err
 		}
 		queue.Requests = queue.Requests[1:]
 		err = s.KSclient.Save(ctx, QUEUE, queue)
+		s.Log(fmt.Sprintf("Ran the queue %v -> %v with %v", queueSize, len(queue.Requests), err))
 		return err
 	}
 
