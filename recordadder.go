@@ -85,7 +85,7 @@ func (s *Server) runTimedTask(ctx context.Context) (time.Time, error) {
 	s.Log("Running the timed task")
 
 	// Wait 24 hours between additions
-	return time.Now().Add(time.Hour * 24), nil
+	return time.Now().Add(time.Minute * 5), nil
 }
 
 func main() {
