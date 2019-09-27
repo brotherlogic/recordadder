@@ -9,7 +9,7 @@ import (
 
 const (
 	// QUEUE - Where we store incoming requests
-	QUEUE = "/github.com/brotherlogic/recordadder/queueu"
+	QUEUE = "/github.com/brotherlogic/recordadder/queue"
 )
 
 //AddRecord adds a record into the system
