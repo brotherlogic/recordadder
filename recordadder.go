@@ -86,7 +86,7 @@ func (s *Server) runTimedTask(ctx context.Context) (time.Time, error) {
 	err := s.processQueue(ctx)
 
 	// Wait 24 hours between additions
-	return time.Now().Add(time.Minute * 5), err
+	return time.Now().Add(time.Hour * 24), err
 }
 
 func main() {
