@@ -17,6 +17,7 @@ func InitTest() *Server {
 	s.rc = &testCollection{}
 	s.SkipLog = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient("./testing")
+	s.GoServer.KSclient.Save(context.Background(), QUEUE, &pb.Queue{})
 	return s
 }
 
