@@ -25,3 +25,9 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 	err = s.KSclient.Save(ctx, QUEUE, queue)
 	return &pb.AddRecordResponse{ExpectedAdditionDate: time.Now().Add(time.Hour * time.Duration((24 * len(queue.Requests)))).Unix()}, err
 }
+
+// Test test function
+func (s *Server) Test(ctx context.Context, req *pb.AddRecordRequest) (*pb.AddRecordResponse, error) {
+	time.Sleep(time.Minute)
+	return nil, nil
+}
