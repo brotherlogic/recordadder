@@ -33,6 +33,8 @@ func main() {
 	defer cancel()
 
 	switch os.Args[1] {
+	case "bump":
+		client.Test(ctx, &pb.AddRecordRequest{})
 	case "add":
 		addFlags := flag.NewFlagSet("AddRecords", flag.ExitOnError)
 		var id = addFlags.Int("id", -1, "Id of the record to add")

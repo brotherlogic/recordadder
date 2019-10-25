@@ -19,4 +19,5 @@ message AddRecordResponse {
 
 service AddRecordService {
   rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {};
+  rpc Test(AddRecordRequest) returns (AddRecordResponse) {};
 }
