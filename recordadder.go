@@ -105,7 +105,7 @@ func main() {
 	server.GoServer.KSclient = *keystoreclient.GetClient(server.DialMaster)
 	server.PrepServer()
 	server.Register = server
-	server.RegisterServer("recordadder", false)
+	server.RegisterServerV2("recordadder", false, true)
 
 	if *init {
 		ctx, cancel := utils.BuildContext("recordadder", "recordadder")
