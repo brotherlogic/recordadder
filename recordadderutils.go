@@ -15,7 +15,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 	}
 	queue := data.(*pb.Queue)
 
-	s.Log(fmt.Sprintf("Found %v entries in the queue", len(queue)))
+	s.Log(fmt.Sprintf("Found %v entries in the queue", len(queue.Requests)))
 
 	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) > time.Hour*24 {
 		queueSize := len(queue.Requests)
