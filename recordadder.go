@@ -35,9 +35,20 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	_, err = client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
-		Release:  &pbgd.Release{Id: r.Id},
-		Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder},
+
+	// Vanilla Addition
+	if r.GetResetFolder() == 0 {
+		_, err = client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
+			Release:  &pbgd.Release{Id: r.Id},
+			Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder},
+		}})
+		return err
+	}
+
+	// Folder reset
+	_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{Update: &pbrc.Record{
+		Release:  &pbgd.Release{InstanceId: r.GetId()},
+		Metadata: &pbrc.ReleaseMetadata{GoalFolder: r.GetResetFolder()},
 	}})
 	return err
 }

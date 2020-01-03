@@ -38,11 +38,12 @@ func main() {
 	case "add":
 		addFlags := flag.NewFlagSet("AddRecords", flag.ExitOnError)
 		var id = addFlags.Int("id", -1, "Id of the record to add")
-		var cost = addFlags.Int("cost", -1, "Cost of the record")
-		var folder = addFlags.Int("folder", -1, "Goal folder for the record")
+		var cost = addFlags.Int("cost", 0, "Cost of the record")
+		var folder = addFlags.Int("folder", 0, "Goal folder for the record")
+		var resetFoldr = addFlags.Int("resetfolder", 0, "Reset folder for the record")
 
 		if err := addFlags.Parse(os.Args[2:]); err == nil {
-			res, err := client.AddRecord(ctx, &pb.AddRecordRequest{Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder)})
+			res, err := client.AddRecord(ctx, &pb.AddRecordRequest{Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr)})
 			if err != nil {
 				log.Fatalf("Error on Add Record: %v", err)
 			}
