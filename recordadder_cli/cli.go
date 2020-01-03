@@ -41,9 +41,10 @@ func main() {
 		var cost = addFlags.Int("cost", 0, "Cost of the record")
 		var folder = addFlags.Int("folder", 0, "Goal folder for the record")
 		var resetFoldr = addFlags.Int("resetfolder", 0, "Reset folder for the record")
+		var year = addFlags.Int("year", time.Now().Year(), "Year for accounting purposes")
 
 		if err := addFlags.Parse(os.Args[2:]); err == nil {
-			res, err := client.AddRecord(ctx, &pb.AddRecordRequest{Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr)})
+			res, err := client.AddRecord(ctx, &pb.AddRecordRequest{Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr), AccountingYear: int32(*year)})
 			if err != nil {
 				log.Fatalf("Error on Add Record: %v", err)
 			}
