@@ -46,3 +46,18 @@ func TestCallTest(t *testing.T) {
 	s := InitTestServer()
 	s.Test(context.Background(), &pb.AddRecordRequest{})
 }
+
+func TestDoubleAddRequest(t *testing.T) {
+	s := InitTestServer()
+
+	val, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	if err != nil {
+		t.Fatalf("Add Record failed: %v", err)
+	}
+
+	val, err = s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+
+	if err == nil {
+		t.Fatalf("Double addition should have failed: %v", val)
+	}
+}
