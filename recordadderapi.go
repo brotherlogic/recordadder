@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	pb "github.com/brotherlogic/recordadder/proto"
@@ -19,6 +20,12 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 		return nil, err
 	}
 	queue := data.(*pb.Queue)
+
+	for _, entry := range queue.Requests {
+		if entry.Id == req.Id {
+			return nil, fmt.Errorf("This record is already in the queue")
+		}
+	}
 
 	queue.Requests = append(queue.Requests, req)
 
