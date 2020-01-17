@@ -33,8 +33,13 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 	return &pb.AddRecordResponse{ExpectedAdditionDate: time.Now().Add(time.Hour * time.Duration((24 * len(queue.Requests)))).Unix()}, err
 }
 
-// Test test function
-func (s *Server) Test(ctx context.Context, req *pb.AddRecordRequest) (*pb.AddRecordResponse, error) {
-	time.Sleep(time.Minute)
-	return nil, nil
+//ListQueue lists the entries in the queue
+func (s *Server) ListQueue(ctx context.Context, req *pb.ListQueueRequest) (*pb.ListQueueResponse, error) {
+	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
+	if err != nil {
+		return nil, err
+	}
+	queue := data.(*pb.Queue)
+
+	return &pb.ListQueueResponse{Requests: queue.GetRequests()}, nil
 }

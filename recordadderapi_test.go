@@ -42,9 +42,14 @@ func TestAddRequestFail(t *testing.T) {
 	}
 }
 
-func TestCallTest(t *testing.T) {
+func TestListQueueFail(t *testing.T) {
 	s := InitTestServer()
-	s.Test(context.Background(), &pb.AddRecordRequest{})
+	s.GoServer.KSclient.Fail = true
+
+	val, err := s.ListQueue(context.Background(), &pb.ListQueueRequest{})
+	if err == nil {
+		t.Errorf("Add Record with failing read did not fail: %v", val)
+	}
 }
 
 func TestDoubleAddRequest(t *testing.T) {
@@ -60,4 +65,24 @@ func TestDoubleAddRequest(t *testing.T) {
 	if err == nil {
 		t.Fatalf("Double addition should have failed: %v", val)
 	}
+}
+
+func TestListQueue(t *testing.T) {
+	s := InitTestServer()
+
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	if err != nil {
+		t.Fatalf("Add Record failed: %v", err)
+	}
+
+	q, err := s.ListQueue(context.Background(), &pb.ListQueueRequest{})
+
+	if err != nil {
+		t.Fatalf("Error listing queue: %v", err)
+	}
+
+	if len(q.GetRequests()) != 1 {
+		t.Errorf("Wrong number of requests in queue: %v", q.GetRequests())
+	}
+
 }

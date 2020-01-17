@@ -20,7 +20,13 @@ message AddRecordResponse {
   int64 expected_addition_date = 1;
 }
 
+message ListQueueRequest {}
+
+message ListQueueResponse {
+  repeated AddRecordRequest requests = 1;
+}
+
 service AddRecordService {
   rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {};
-  rpc Test(AddRecordRequest) returns (AddRecordResponse) {};
+  rpc ListQueue(ListQueueRequest) returns (ListQueueResponse) {};
 }

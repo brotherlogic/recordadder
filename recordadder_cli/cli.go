@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/brotherlogic/goserver/utils"
@@ -15,14 +14,15 @@ import (
 
 	//Needed to pull in gzip encoding init
 	_ "google.golang.org/grpc/encoding/gzip"
+	"google.golang.org/grpc/resolver"
 )
 
+func init() {
+	resolver.Register(&utils.DiscoveryClientResolverBuilder{})
+}
+
 func main() {
-	host, port, err := utils.Resolve("recordadder", "recordadder-cli")
-	if err != nil {
-		log.Fatalf("Unable to reach recordadder: %v", err)
-	}
-	conn, err := grpc.Dial(host+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	conn, err := grpc.Dial("discovery:///recordadder", grpc.WithInsecure(), grpc.WithBalancerName("my_pick_first"))
 	if err != nil {
 		log.Fatalf("Unable to dial: %v", err)
 	}
@@ -33,8 +33,6 @@ func main() {
 	defer cancel()
 
 	switch os.Args[1] {
-	case "bump":
-		client.Test(ctx, &pb.AddRecordRequest{})
 	case "add":
 		addFlags := flag.NewFlagSet("AddRecords", flag.ExitOnError)
 		var id = addFlags.Int("id", -1, "Id of the record to add")
