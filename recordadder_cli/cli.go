@@ -48,5 +48,17 @@ func main() {
 			}
 			fmt.Printf("Expected to be added on %v\n", time.Unix(res.ExpectedAdditionDate, 0))
 		}
+	case "list":
+		res, err := client.ListQueue(ctx, &pb.ListQueueRequest{})
+		if err != nil {
+			log.Fatalf("Error in listing: %v", err)
+		}
+		cost := int32(0)
+		for _, entry := range res.GetRequests() {
+			fmt.Printf("%v - %v\n", entry.GetId(), entry.GetCost())
+			cost += entry.GetCost()
+		}
+		fmt.Printf("Total Cost = %v\n", cost)
 	}
+
 }

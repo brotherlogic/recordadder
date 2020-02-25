@@ -8,16 +8,36 @@ import (
 	"time"
 
 	"github.com/brotherlogic/goserver"
+	"github.com/brotherlogic/goserver/utils"
 	"github.com/brotherlogic/keystore/client"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
 	pbgd "github.com/brotherlogic/godiscogs"
 	pbg "github.com/brotherlogic/goserver/proto"
-	"github.com/brotherlogic/goserver/utils"
 	pb "github.com/brotherlogic/recordadder/proto"
+	rbpb "github.com/brotherlogic/recordbudget/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
+
+type budget interface {
+	getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, error)
+}
+
+type prodBudget struct {
+	dial func(server string) (*grpc.ClientConn, error)
+}
+
+func (p *prodBudget) getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, error) {
+	conn, err := p.dial("recordbudget")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := rbpb.NewRecordBudgetServiceClient(conn)
+	return client.GetBudget(ctx, &rbpb.GetBudgetRequest{Year: int32(time.Now().Year())})
+}
 
 type collection interface {
 	addRecord(ctx context.Context, r *pb.AddRecordRequest) error
@@ -55,7 +75,8 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 //Server main server type
 type Server struct {
 	*goserver.GoServer
-	rc collection
+	rc     collection
+	budget budget
 }
 
 // Init builds the server
@@ -63,7 +84,8 @@ func Init() *Server {
 	s := &Server{
 		GoServer: &goserver.GoServer{},
 	}
-	s.rc = &prodCollection{dial: s.DialMaster}
+	s.rc = &prodCollection{dial: s.NewBaseDial}
+	s.budget = &prodBudget{dial: s.NewBaseDial}
 	return s
 }
 
