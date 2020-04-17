@@ -65,10 +65,12 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 	}
 
 	// Folder reset
-	_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{Update: &pbrc.Record{
-		Release:  &pbgd.Release{InstanceId: r.GetId()},
-		Metadata: &pbrc.ReleaseMetadata{GoalFolder: r.GetResetFolder(), SetRating: -1},
-	}})
+	_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
+		Reason: "recordadder-folderupdate",
+		Update: &pbrc.Record{
+			Release:  &pbgd.Release{InstanceId: r.GetId()},
+			Metadata: &pbrc.ReleaseMetadata{GoalFolder: r.GetResetFolder(), SetRating: -1},
+		}})
 	return err
 }
 
