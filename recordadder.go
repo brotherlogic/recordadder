@@ -142,7 +142,8 @@ func (s *Server) runTimedTask() {
 			done, err := s.Elect()
 			if err == nil {
 				ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
-				s.processQueue(ctx)
+				err := s.processQueue(ctx)
+				s.Log(fmt.Sprintf("Ran queue: %v", err))
 				cancel()
 			}
 			done()
