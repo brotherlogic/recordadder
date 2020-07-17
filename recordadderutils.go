@@ -23,7 +23,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 	available := budget.GetBudget() - budget.GetSpends()
 	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget", len(queue.Requests), available))
 
-	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) > time.Hour*24 {
+	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24 {
 		for i, req := range queue.GetRequests() {
 			if req.GetCost() < available {
 				s.Log(fmt.Sprintf("Adding %v", queue.Requests[i]))
