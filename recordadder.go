@@ -9,7 +9,6 @@ import (
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
-	"github.com/brotherlogic/keystore/client"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
@@ -25,11 +24,11 @@ type budget interface {
 }
 
 type prodBudget struct {
-	dial func(server string) (*grpc.ClientConn, error)
+	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 }
 
 func (p *prodBudget) getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, error) {
-	conn, err := p.dial("recordbudget")
+	conn, err := p.dial(ctx, "recordbudget")
 	if err != nil {
 		return nil, err
 	}
@@ -44,11 +43,11 @@ type collection interface {
 }
 
 type prodCollection struct {
-	dial func(server string) (*grpc.ClientConn, error)
+	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 }
 
 func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) error {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return err
 	}
@@ -77,17 +76,19 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 //Server main server type
 type Server struct {
 	*goserver.GoServer
-	rc     collection
-	budget budget
+	rc      collection
+	budget  budget
+	running bool
 }
 
 // Init builds the server
 func Init() *Server {
 	s := &Server{
 		GoServer: &goserver.GoServer{},
+		running:  true,
 	}
-	s.rc = &prodCollection{dial: s.NewBaseDial}
-	s.budget = &prodBudget{dial: s.NewBaseDial}
+	s.rc = &prodCollection{dial: s.FDialServer}
+	s.budget = &prodBudget{dial: s.FDialServer}
 	return s
 }
 
@@ -116,11 +117,39 @@ func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{}
 }
 
-func (s *Server) runTimedTask(ctx context.Context) (time.Time, error) {
-	err := s.processQueue(ctx)
+func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
+	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
+	if err != nil {
+		return nil, err
+	}
+	queue := data.(*pb.Queue)
+	return queue, nil
+}
 
-	// Wait 24 hours between additions
-	return time.Now().Add(time.Hour * 24), err
+func (s *Server) runTimedTask() {
+	ctx, cancel := utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+	queue, err := s.load(ctx)
+	cancel()
+	if err != nil {
+		log.Fatalf("Unable to initialize with queue")
+	}
+	for s.running {
+		time.Sleep(time.Now().Sub(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour * 24)))
+		ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+		queue, err = s.load(ctx)
+		cancel()
+		if err == nil && time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) {
+			done, err := s.Elect()
+			if err == nil {
+				ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+				s.processQueue(ctx)
+				cancel()
+			}
+			done()
+		}
+
+		time.Sleep(time.Minute)
+	}
 }
 
 func main() {
@@ -134,7 +163,6 @@ func main() {
 		log.SetOutput(ioutil.Discard)
 	}
 	server := Init()
-	server.GoServer.KSclient = *keystoreclient.GetClient(server.DialMaster)
 	server.PrepServer()
 	server.Register = server
 
@@ -152,7 +180,7 @@ func main() {
 		return
 	}
 
-	server.RegisterLockingTask(server.runTimedTask, "run_timed_task")
+	go server.runTimedTask()
 
 	fmt.Printf("%v", server.Serve())
 }
