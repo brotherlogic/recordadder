@@ -136,8 +136,8 @@ func (s *Server) runTimedTask() {
 		log.Fatalf("Unable to initialize with queue")
 	}
 	for s.running {
-		s.Log(fmt.Sprintf("Sleeping for %v -> %v, %v, %v", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)), time.Now(), time.Unix(queue.LastAdditionDate, 0), time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)))
-		time.Sleep(time.Now().Sub(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour * 24)))
+		s.Log(fmt.Sprintf("Sleeping for %v -> %v, %v, %v", time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Now(), time.Unix(queue.LastAdditionDate, 0), time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)))
+		time.Sleep(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour * 24).Sub(time.Now()))
 		ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
 		queue, err = s.load(ctx)
 		cancel()
