@@ -36,9 +36,8 @@ func (s *Server) processQueue(ctx context.Context) error {
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
 				err = s.KSclient.Save(ctx, QUEUE, queue)
 				return err
-			} else {
-				s.Log(fmt.Sprintf("WHY %v", req.GetCost()))
 			}
+			s.Log(fmt.Sprintf("WHY %v", req.GetCost()))
 		}
 	}
 
