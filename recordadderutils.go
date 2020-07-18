@@ -21,7 +21,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 	}
 
 	available := budget.GetBudget() - budget.GetSpends()
-	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget", len(queue.Requests), available))
+	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v)", len(queue.Requests), available, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24))
 	time.Sleep(time.Second * 2)
 
 	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24 {
@@ -36,6 +36,8 @@ func (s *Server) processQueue(ctx context.Context) error {
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
 				err = s.KSclient.Save(ctx, QUEUE, queue)
 				return err
+			} else {
+				s.Log(fmt.Sprintf("WHY %v", req.GetCost()))
 			}
 		}
 	}
