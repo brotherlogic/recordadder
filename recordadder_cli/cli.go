@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/brotherlogic/goserver/utils"
-	"google.golang.org/grpc"
 
 	pb "github.com/brotherlogic/recordadder/proto"
 
@@ -22,15 +21,16 @@ func init() {
 }
 
 func main() {
-	conn, err := grpc.Dial("discovery:///recordadder", grpc.WithInsecure(), grpc.WithBalancerName("my_pick_first"))
+	ctx, cancel := utils.BuildContext("recordader-cli", "recordadder")
+	defer cancel()
+
+	conn, err := utils.LFDialServer(ctx, "recordadder")
 	if err != nil {
 		log.Fatalf("Unable to dial: %v", err)
 	}
 	defer conn.Close()
 
 	client := pb.NewAddRecordServiceClient(conn)
-	ctx, cancel := utils.BuildContext("recordader-cli", "recordadder")
-	defer cancel()
 
 	switch os.Args[1] {
 	case "add":
