@@ -42,11 +42,13 @@ func main() {
 		var year = addFlags.Int("year", time.Now().Year(), "Year for accounting purposes")
 
 		if err := addFlags.Parse(os.Args[2:]); err == nil {
-			res, err := client.AddRecord(ctx, &pb.AddRecordRequest{Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr), AccountingYear: int32(*year)})
-			if err != nil {
-				log.Fatalf("Error on Add Record: %v", err)
+			if id > 0 && cost > 0 && folder > 0 {
+				res, err := client.AddRecord(ctx, &pb.AddRecordRequest{Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr), AccountingYear: int32(*year)})
+				if err != nil {
+					log.Fatalf("Error on Add Record: %v", err)
+				}
+				fmt.Printf("Expected to be added on %v\n", time.Unix(res.ExpectedAdditionDate, 0))
 			}
-			fmt.Printf("Expected to be added on %v\n", time.Unix(res.ExpectedAdditionDate, 0))
 		}
 	case "list":
 		res, err := client.ListQueue(ctx, &pb.ListQueueRequest{})
