@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package recordadder;
 
+option go_package = "github.com/brotherlogic/recordadder/proto";
+
 message Queue {
   repeated AddRecordRequest requests = 1;
   int32 processed_records = 2;
@@ -14,6 +16,7 @@ message AddRecordRequest {
   int32 folder = 3;
   int32 accounting_year = 5;
   int32 reset_folder = 4;
+  bool arrived = 6;
 }
 
 message AddRecordResponse {
