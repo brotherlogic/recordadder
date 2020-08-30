@@ -31,7 +31,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 				s.KSclient.Save(ctx, QUEUE, queue)
 				return fmt.Errorf("Bad entry in the queue")
 			}
-			if req.GetCost() < available {
+			if req.GetCost() < available && req.GetArrived() {
 				err = s.rc.addRecord(ctx, queue.Requests[i])
 				s.Log(fmt.Sprintf("Adding %v -> %v", queue.Requests[i], err))
 				if err != nil {
@@ -42,7 +42,8 @@ func (s *Server) processQueue(ctx context.Context) error {
 				err = s.KSclient.Save(ctx, QUEUE, queue)
 				return err
 			}
-			s.Log(fmt.Sprintf("WHY %v", req.GetCost()))
+
+			s.RaiseIssue("Addition Error", fmt.Sprintf("Could not add %v -> %v", available))
 		}
 	}
 
