@@ -44,6 +44,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 			}
 
 			s.RaiseIssue("Addition Error", fmt.Sprintf("Could not add %v -> %v", available, err))
+			time.Sleep(time.Second * 5)
 		}
 	}
 
