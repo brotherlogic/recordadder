@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: recordadder.proto
 
-package recordadder
+package proto
 
 import (
 	context "context"
@@ -311,6 +311,99 @@ func (x *ListQueueResponse) GetRequests() []*AddRecordRequest {
 	return nil
 }
 
+type UpdateRecordRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id        int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Available bool  `protobuf:"varint,2,opt,name=available,proto3" json:"available,omitempty"`
+}
+
+func (x *UpdateRecordRequest) Reset() {
+	*x = UpdateRecordRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_recordadder_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateRecordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateRecordRequest) ProtoMessage() {}
+
+func (x *UpdateRecordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_recordadder_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateRecordRequest.ProtoReflect.Descriptor instead.
+func (*UpdateRecordRequest) Descriptor() ([]byte, []int) {
+	return file_recordadder_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UpdateRecordRequest) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateRecordRequest) GetAvailable() bool {
+	if x != nil {
+		return x.Available
+	}
+	return false
+}
+
+type UpdateRecordResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *UpdateRecordResponse) Reset() {
+	*x = UpdateRecordResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_recordadder_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateRecordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateRecordResponse) ProtoMessage() {}
+
+func (x *UpdateRecordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_recordadder_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateRecordResponse.ProtoReflect.Descriptor instead.
+func (*UpdateRecordResponse) Descriptor() ([]byte, []int) {
+	return file_recordadder_proto_rawDescGZIP(), []int{6}
+}
+
 var File_recordadder_proto protoreflect.FileDescriptor
 
 var file_recordadder_proto_rawDesc = []byte{
@@ -348,18 +441,32 @@ var file_recordadder_proto_rawDesc = []byte{
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e,
 	0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x41, 0x64, 0x64, 0x52,
 	0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x08, 0x72, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x32, 0xae, 0x01, 0x0a, 0x10, 0x41, 0x64, 0x64, 0x52, 0x65,
-	0x63, 0x6f, 0x72, 0x64, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x4c, 0x0a, 0x09, 0x41,
-	0x64, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x1d, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72,
-	0x64, 0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x41, 0x64, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64,
-	0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x41, 0x64, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4c, 0x0a, 0x09, 0x4c, 0x69, 0x73,
-	0x74, 0x51, 0x75, 0x65, 0x75, 0x65, 0x12, 0x1d, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61,
-	0x64, 0x64, 0x65, 0x72, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x51, 0x75, 0x65, 0x75, 0x65, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64,
-	0x64, 0x65, 0x72, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x51, 0x75, 0x65, 0x75, 0x65, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x22, 0x43, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1c, 0x0a,
+	0x09, 0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08,
+	0x52, 0x09, 0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x16, 0x0a, 0x14, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x32, 0x85, 0x02, 0x0a, 0x10, 0x41, 0x64, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x4c, 0x0a, 0x09, 0x41, 0x64, 0x64, 0x52,
+	0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x1d, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64,
+	0x64, 0x65, 0x72, 0x2e, 0x41, 0x64, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64,
+	0x65, 0x72, 0x2e, 0x41, 0x64, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4c, 0x0a, 0x09, 0x4c, 0x69, 0x73, 0x74, 0x51, 0x75,
+	0x65, 0x75, 0x65, 0x12, 0x1d, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65,
+	0x72, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x51, 0x75, 0x65, 0x75, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65, 0x72,
+	0x2e, 0x4c, 0x69, 0x73, 0x74, 0x51, 0x75, 0x65, 0x75, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x55, 0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65,
+	0x63, 0x6f, 0x72, 0x64, 0x12, 0x20, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64,
+	0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x21, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61,
+	0x64, 0x64, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x2b, 0x5a, 0x29, 0x67,
+	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x72, 0x6f, 0x74, 0x68, 0x65,
+	0x72, 0x6c, 0x6f, 0x67, 0x69, 0x63, 0x2f, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64,
+	0x65, 0x72, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -374,23 +481,27 @@ func file_recordadder_proto_rawDescGZIP() []byte {
 	return file_recordadder_proto_rawDescData
 }
 
-var file_recordadder_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_recordadder_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_recordadder_proto_goTypes = []interface{}{
-	(*Queue)(nil),             // 0: recordadder.Queue
-	(*AddRecordRequest)(nil),  // 1: recordadder.AddRecordRequest
-	(*AddRecordResponse)(nil), // 2: recordadder.AddRecordResponse
-	(*ListQueueRequest)(nil),  // 3: recordadder.ListQueueRequest
-	(*ListQueueResponse)(nil), // 4: recordadder.ListQueueResponse
+	(*Queue)(nil),                // 0: recordadder.Queue
+	(*AddRecordRequest)(nil),     // 1: recordadder.AddRecordRequest
+	(*AddRecordResponse)(nil),    // 2: recordadder.AddRecordResponse
+	(*ListQueueRequest)(nil),     // 3: recordadder.ListQueueRequest
+	(*ListQueueResponse)(nil),    // 4: recordadder.ListQueueResponse
+	(*UpdateRecordRequest)(nil),  // 5: recordadder.UpdateRecordRequest
+	(*UpdateRecordResponse)(nil), // 6: recordadder.UpdateRecordResponse
 }
 var file_recordadder_proto_depIdxs = []int32{
 	1, // 0: recordadder.Queue.requests:type_name -> recordadder.AddRecordRequest
 	1, // 1: recordadder.ListQueueResponse.requests:type_name -> recordadder.AddRecordRequest
 	1, // 2: recordadder.AddRecordService.AddRecord:input_type -> recordadder.AddRecordRequest
 	3, // 3: recordadder.AddRecordService.ListQueue:input_type -> recordadder.ListQueueRequest
-	2, // 4: recordadder.AddRecordService.AddRecord:output_type -> recordadder.AddRecordResponse
-	4, // 5: recordadder.AddRecordService.ListQueue:output_type -> recordadder.ListQueueResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
+	5, // 4: recordadder.AddRecordService.UpdateRecord:input_type -> recordadder.UpdateRecordRequest
+	2, // 5: recordadder.AddRecordService.AddRecord:output_type -> recordadder.AddRecordResponse
+	4, // 6: recordadder.AddRecordService.ListQueue:output_type -> recordadder.ListQueueResponse
+	6, // 7: recordadder.AddRecordService.UpdateRecord:output_type -> recordadder.UpdateRecordResponse
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -462,6 +573,30 @@ func file_recordadder_proto_init() {
 				return nil
 			}
 		}
+		file_recordadder_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateRecordRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_recordadder_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateRecordResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -469,7 +604,7 @@ func file_recordadder_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_recordadder_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -497,6 +632,7 @@ const _ = grpc.SupportPackageIsVersion6
 type AddRecordServiceClient interface {
 	AddRecord(ctx context.Context, in *AddRecordRequest, opts ...grpc.CallOption) (*AddRecordResponse, error)
 	ListQueue(ctx context.Context, in *ListQueueRequest, opts ...grpc.CallOption) (*ListQueueResponse, error)
+	UpdateRecord(ctx context.Context, in *UpdateRecordRequest, opts ...grpc.CallOption) (*UpdateRecordResponse, error)
 }
 
 type addRecordServiceClient struct {
@@ -525,10 +661,20 @@ func (c *addRecordServiceClient) ListQueue(ctx context.Context, in *ListQueueReq
 	return out, nil
 }
 
+func (c *addRecordServiceClient) UpdateRecord(ctx context.Context, in *UpdateRecordRequest, opts ...grpc.CallOption) (*UpdateRecordResponse, error) {
+	out := new(UpdateRecordResponse)
+	err := c.cc.Invoke(ctx, "/recordadder.AddRecordService/UpdateRecord", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddRecordServiceServer is the server API for AddRecordService service.
 type AddRecordServiceServer interface {
 	AddRecord(context.Context, *AddRecordRequest) (*AddRecordResponse, error)
 	ListQueue(context.Context, *ListQueueRequest) (*ListQueueResponse, error)
+	UpdateRecord(context.Context, *UpdateRecordRequest) (*UpdateRecordResponse, error)
 }
 
 // UnimplementedAddRecordServiceServer can be embedded to have forward compatible implementations.
@@ -540,6 +686,9 @@ func (*UnimplementedAddRecordServiceServer) AddRecord(context.Context, *AddRecor
 }
 func (*UnimplementedAddRecordServiceServer) ListQueue(context.Context, *ListQueueRequest) (*ListQueueResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListQueue not implemented")
+}
+func (*UnimplementedAddRecordServiceServer) UpdateRecord(context.Context, *UpdateRecordRequest) (*UpdateRecordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRecord not implemented")
 }
 
 func RegisterAddRecordServiceServer(s *grpc.Server, srv AddRecordServiceServer) {
@@ -582,6 +731,24 @@ func _AddRecordService_ListQueue_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AddRecordService_UpdateRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddRecordServiceServer).UpdateRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/recordadder.AddRecordService/UpdateRecord",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddRecordServiceServer).UpdateRecord(ctx, req.(*UpdateRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AddRecordService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "recordadder.AddRecordService",
 	HandlerType: (*AddRecordServiceServer)(nil),
@@ -593,6 +760,10 @@ var _AddRecordService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListQueue",
 			Handler:    _AddRecordService_ListQueue_Handler,
+		},
+		{
+			MethodName: "UpdateRecord",
+			Handler:    _AddRecordService_UpdateRecord_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
