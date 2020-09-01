@@ -57,10 +57,21 @@ func main() {
 		}
 		cost := int32(0)
 		for _, entry := range res.GetRequests() {
-			fmt.Printf("%v - %v\n", entry.GetId(), entry.GetCost())
+			fmt.Printf("%v - %v: %v\n", entry.GetId(), entry.GetCost(), entry)
 			cost += entry.GetCost()
 		}
 		fmt.Printf("Total Cost = %v\n", cost)
+	case "here":
+		addFlags := flag.NewFlagSet("AddRecords", flag.ExitOnError)
+		var id = addFlags.Int("id", -1, "Id of the record to add")
+
+		if err := addFlags.Parse(os.Args[2:]); err == nil {
+			if *id > 0 {
+				_, err := client.UpdateRecord(ctx, &pb.UpdateRecordRequest{Id: int32(*id), Available: true})
+				fmt.Printf("Updated: %v\n", err)
+			}
+		}
+
 	}
 
 }
