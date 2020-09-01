@@ -43,3 +43,22 @@ func (s *Server) ListQueue(ctx context.Context, req *pb.ListQueueRequest) (*pb.L
 
 	return &pb.ListQueueResponse{Requests: queue.GetRequests()}, nil
 }
+
+//UpdateRecord updates a record
+func (s *Server) UpdateRecord(ctx context.Context, req *pb.UpdateRecordRequest) (*pb.UpdateRecordResponse, error) {
+	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
+	if err != nil {
+		return nil, err
+	}
+	queue := data.(*pb.Queue)
+
+	for _, entry := range queue.Requests {
+		if entry.Id == req.Id {
+			if req.GetAvailable() {
+				entry.Arrived = true
+			}
+		}
+	}
+
+	return &pb.UpdateRecordResponse{}, s.KSclient.Save(ctx, QUEUE, queue)
+}

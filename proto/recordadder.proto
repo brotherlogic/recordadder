@@ -29,7 +29,16 @@ message ListQueueResponse {
   repeated AddRecordRequest requests = 1;
 }
 
+message UpdateRecordRequest {
+  int32 id = 1;
+  bool available = 2;
+}
+
+message UpdateRecordResponse {
+}
+
 service AddRecordService {
   rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {};
   rpc ListQueue(ListQueueRequest) returns (ListQueueResponse) {};
+  rpc UpdateRecord(UpdateRecordRequest) returns (UpdateRecordResponse) {};
 }
