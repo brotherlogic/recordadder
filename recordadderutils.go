@@ -9,6 +9,7 @@ import (
 )
 
 func (s *Server) processQueue(ctx context.Context) error {
+	s.Log(fmt.Sprintf("Processing Queue"))
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
 		return fmt.Errorf("Error reading queue: %v", err)

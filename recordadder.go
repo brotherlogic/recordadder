@@ -132,6 +132,7 @@ func (s *Server) runTimedTask() {
 	time.Sleep(time.Second * 10)
 
 	ctx, cancel := utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+	s.Log(fmt.Sprintf("First read"))
 	queue, err := s.load(ctx)
 	cancel()
 	if err != nil {
@@ -141,9 +142,11 @@ func (s *Server) runTimedTask() {
 		s.Log(fmt.Sprintf("Sleeping for %v -> %v, %v, %v", time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Now(), time.Unix(queue.LastAdditionDate, 0), time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)))
 		time.Sleep(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour * 24).Sub(time.Now()))
 		ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+		s.Log(fmt.Sprintf("Loading pre-check"))
 		queue, err = s.load(ctx)
 		cancel()
 		if err == nil && time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) {
+			s.Log(fmt.Sprintf("Tracking queue"))
 			done, err := s.Elect()
 			if err == nil {
 				ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
