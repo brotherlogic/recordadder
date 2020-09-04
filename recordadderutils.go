@@ -27,7 +27,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 
 	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24 {
 		for i, req := range queue.GetRequests() {
-			if req.GetId() <= 0 {
+			if req.GetId() <= 0 || req.GetResetFolder() > 0 {
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
 				s.KSclient.Save(ctx, QUEUE, queue)
 				return fmt.Errorf("Bad entry in the queue")
@@ -43,8 +43,6 @@ func (s *Server) processQueue(ctx context.Context) error {
 				err = s.KSclient.Save(ctx, QUEUE, queue)
 				return err
 			}
-
-			s.RaiseIssue("Addition Error", fmt.Sprintf("Could not add %v -> %v", available, err))
 			time.Sleep(time.Second * 5)
 		}
 	}
