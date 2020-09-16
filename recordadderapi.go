@@ -62,3 +62,22 @@ func (s *Server) UpdateRecord(ctx context.Context, req *pb.UpdateRecordRequest) 
 
 	return &pb.UpdateRecordResponse{}, s.KSclient.Save(ctx, QUEUE, queue)
 }
+
+func (s *Server) DeleteRecord(ctx context.Context, req *pb.DeleteRecordRequest) (*pb.DeleteRecordResponse, error) {
+	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
+	if err != nil {
+		return nil, err
+	}
+	queue := data.(*pb.Queue)
+
+	nqueue := []*pb.AddRecordRequest{}
+	for _, entry := range queue.Requests {
+		if entry.Id != req.Id {
+			nqueue = append(nqueue, entry)
+		}
+	}
+	queue.Requests = nqueue
+
+	return &pb.DeleteRecordResponse{}, s.KSclient.Save(ctx, QUEUE, queue)
+
+}
