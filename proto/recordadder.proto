@@ -37,8 +37,15 @@ message UpdateRecordRequest {
 message UpdateRecordResponse {
 }
 
+message DeleteRecordRequest{
+  int32 id = 1;
+}
+
+message DeleteRecordResponse{}
+
 service AddRecordService {
   rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {};
   rpc ListQueue(ListQueueRequest) returns (ListQueueResponse) {};
   rpc UpdateRecord(UpdateRecordRequest) returns (UpdateRecordResponse) {};
+  rpc DeleteRecord(DeleteRecordRequest) returns (DeleteRecordResponse) {};
 }
