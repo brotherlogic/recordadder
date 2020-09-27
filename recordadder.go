@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"time"
 
 	"github.com/brotherlogic/goserver"
@@ -128,7 +129,7 @@ func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
 	return queue, nil
 }
 
-func (s *Server) runTimedTask() {
+func (s *Server) runTimedTask() error {
 	time.Sleep(time.Second * 10)
 
 	ctx, cancel := utils.ManualContext("adder-load", "adder-load", time.Minute, true)
@@ -136,7 +137,7 @@ func (s *Server) runTimedTask() {
 	queue, err := s.load(ctx)
 	cancel()
 	if err != nil {
-		log.Fatalf("Unable to initialize with queue: %v", err)
+		return err
 	}
 	for s.running {
 		s.Log(fmt.Sprintf("Sleeping for %v -> %v, %v, %v", time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Now(), time.Unix(queue.LastAdditionDate, 0), time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)))
@@ -159,6 +160,8 @@ func (s *Server) runTimedTask() {
 
 		time.Sleep(time.Minute)
 	}
+
+	return nil
 }
 
 func main() {
@@ -189,7 +192,12 @@ func main() {
 		return
 	}
 
-	go server.runTimedTask()
+	go func() {
+		err := server.runTimedTask()
+		if err != nil {
+			os.Exit(1)
+		}
+	}()
 
 	fmt.Printf("%v", server.Serve())
 }
