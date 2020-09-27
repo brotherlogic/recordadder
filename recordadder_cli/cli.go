@@ -71,6 +71,16 @@ func main() {
 				fmt.Printf("Updated: %v\n", err)
 			}
 		}
+	case "delete":
+		addFlags := flag.NewFlagSet("AddRecords", flag.ExitOnError)
+		var id = addFlags.Int("id", -1, "Id of the record to add")
+
+		if err := addFlags.Parse(os.Args[2:]); err == nil {
+			if *id > 0 {
+				_, err := client.DeleteRecord(ctx, &pb.DeleteRecordRequest{Id: int32(*id)})
+				fmt.Printf("Deleted: %v\n", err)
+			}
+		}
 
 	}
 
