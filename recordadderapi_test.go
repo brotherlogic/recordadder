@@ -5,8 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/brotherlogic/keystore/client"
-
+	keystoreclient "github.com/brotherlogic/keystore/client"
 	pb "github.com/brotherlogic/recordadder/proto"
 )
 
@@ -42,13 +41,23 @@ func TestAddRequestFail(t *testing.T) {
 	}
 }
 
-func TestListQueueFail(t *testing.T) {
+func TestKeystoreFails(t *testing.T) {
 	s := InitTestServer()
 	s.GoServer.KSclient.Fail = true
 
 	val, err := s.ListQueue(context.Background(), &pb.ListQueueRequest{})
 	if err == nil {
 		t.Errorf("Add Record with failing read did not fail: %v", val)
+	}
+
+	valup, err := s.UpdateRecord(context.Background(), &pb.UpdateRecordRequest{})
+	if err == nil {
+		t.Errorf("Update Record with failing read did not fail: %v", valup)
+	}
+
+	valdel, err := s.DeleteRecord(context.Background(), &pb.DeleteRecordRequest{})
+	if err == nil {
+		t.Errorf("Delete Record with failing read did not fail: %v", valdel)
 	}
 }
 
@@ -84,5 +93,27 @@ func TestListQueue(t *testing.T) {
 	if len(q.GetRequests()) != 1 {
 		t.Errorf("Wrong number of requests in queue: %v", q.GetRequests())
 	}
+}
 
+func TestEmptyDelete(t *testing.T) {
+	s := InitTestServer()
+
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	if err != nil {
+		t.Fatalf("Add Record failed: %v", err)
+	}
+
+	_, err = s.DeleteRecord(context.Background(), &pb.DeleteRecordRequest{Id: 12})
+	if err != nil {
+		t.Errorf("Bad delete: %v", err)
+	}
+
+	q, err := s.ListQueue(context.Background(), &pb.ListQueueRequest{})
+	if err != nil {
+		t.Errorf("Bad list: %v", err)
+	}
+
+	if len(q.GetRequests()) != 1 {
+		t.Errorf("Delete failed: %v", q)
+	}
 }
