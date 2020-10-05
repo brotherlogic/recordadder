@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/brotherlogic/keystore/client"
+	keystoreclient "github.com/brotherlogic/keystore/client"
 	rbpb "github.com/brotherlogic/recordbudget/proto"
 	"golang.org/x/net/context"
 
@@ -52,7 +52,7 @@ func TestBasicRunThrough(t *testing.T) {
 	tc := &testCollection{}
 	s.rc = tc
 
-	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12})
+	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12, Arrived: true})
 
 	err := s.processQueue(context.Background())
 	if err != nil {
@@ -104,10 +104,38 @@ func TestRunThroughWithAddFail(t *testing.T) {
 	tc := &testCollection{fail: true}
 	s.rc = tc
 
-	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12})
+	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12, Arrived: true})
 
 	err := s.processQueue(context.Background())
 	if err == nil {
 		t.Errorf("No error processing the queue with failing add")
+	}
+}
+
+func TestWithBadAdd(t *testing.T) {
+	s := InitTest()
+
+	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: -1, Folder: 12, Cost: 12, Arrived: true})
+
+	err := s.processQueue(context.Background())
+	if err == nil {
+		t.Errorf("No error processing the queue with failing add")
+	}
+}
+
+func TestBasicRunThroughWithNoAction(t *testing.T) {
+	s := InitTest()
+	tc := &testCollection{}
+	s.rc = tc
+
+	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12, Arrived: false})
+
+	err := s.processQueue(context.Background())
+	if err != nil {
+		t.Errorf("Error processing queue: %v", err)
+	}
+
+	if tc.addedRecord != nil {
+		t.Errorf("Record was  added: %v", tc.addedRecord)
 	}
 }

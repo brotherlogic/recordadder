@@ -63,6 +63,7 @@ func (s *Server) UpdateRecord(ctx context.Context, req *pb.UpdateRecordRequest) 
 	return &pb.UpdateRecordResponse{}, s.KSclient.Save(ctx, QUEUE, queue)
 }
 
+//DeleteRecord remove a record from the queue
 func (s *Server) DeleteRecord(ctx context.Context, req *pb.DeleteRecordRequest) (*pb.DeleteRecordResponse, error) {
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
