@@ -77,20 +77,45 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 //Server main server type
 type Server struct {
 	*goserver.GoServer
-	rc      collection
-	budget  budget
-	running bool
+	rc          collection
+	budget      budget
+	running     bool
+	fanout      []string
+	testing     bool
+	testingFail bool
 }
 
 // Init builds the server
 func Init() *Server {
 	s := &Server{
-		GoServer: &goserver.GoServer{},
-		running:  true,
+		GoServer:    &goserver.GoServer{},
+		running:     true,
+		fanout:      []string{},
+		testing:     false,
+		testingFail: false,
 	}
 	s.rc = &prodCollection{dial: s.FDialServer}
 	s.budget = &prodBudget{dial: s.FDialServer}
 	return s
+}
+
+func (s *Server) runFanout(ctx context.Context, server string, id int32) error {
+	if s.testing {
+		if s.testingFail {
+			return fmt.Errorf("Build to fail")
+		}
+		return nil
+	}
+
+	conn, err := s.FDialServer(ctx, server)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	client := pb.NewClientAddUpdateServiceClient(conn)
+	_, err = client.ClientAddUpdate(ctx, &pb.ClientAddUpdateRequest{Id: id})
+	return err
 }
 
 // DoRegister does RPC registration
