@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/brotherlogic/goserver/utils"
 	pb "github.com/brotherlogic/recordadder/proto"
 	"golang.org/x/net/context"
 )
@@ -38,9 +39,26 @@ func (s *Server) processQueue(ctx context.Context) error {
 				if err != nil {
 					return fmt.Errorf("Error adding record: %v", err)
 				}
+
+				// Run the fanout
+				for _, server := range s.fanout {
+					// Use a new context for fanout
+					ctxfinner, cancelfinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
+					err := s.runFanout(ctxfinner, server, req.GetId())
+					if err != nil {
+						s.RaiseIssue(fmt.Sprintf("Fanout for %v failed", server), fmt.Sprintf("Error was %v", err))
+					}
+					cancelfinner()
+				}
+
 				queue.LastAdditionDate = time.Now().Unix()
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
-				err = s.KSclient.Save(ctx, QUEUE, queue)
+
+				// We need to refresh the context for the save since the fanout may have run out the clock
+				ctxinner, cancelinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
+				err = s.KSclient.Save(ctxinner, QUEUE, queue)
+				cancelinner()
+
 				return err
 			}
 			time.Sleep(time.Second * 5)

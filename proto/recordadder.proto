@@ -49,3 +49,13 @@ service AddRecordService {
   rpc UpdateRecord(UpdateRecordRequest) returns (UpdateRecordResponse) {};
   rpc DeleteRecord(DeleteRecordRequest) returns (DeleteRecordResponse) {};
 }
+
+message ClientAddUpdateRequest {
+  int32 id = 1;
+}
+
+message ClientAddUpdateResponse {}
+
+service ClientAddUpdateService {
+  rpc ClientAddUpdate(ClientAddUpdateRequest) returns (ClientAddUpdateResponse) {};
+}

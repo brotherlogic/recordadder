@@ -18,8 +18,11 @@ func InitTest() *Server {
 	s.rc = &testCollection{}
 	s.budget = &testBudget{}
 	s.SkipLog = true
+	s.SkipIssue = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient("./testing")
 	s.GoServer.KSclient.Save(context.Background(), QUEUE, &pb.Queue{})
+	s.fanout = []string{"madeup1"}
+	s.testing = true
 	return s
 }
 
@@ -51,6 +54,24 @@ func TestBasicRunThrough(t *testing.T) {
 	s := InitTest()
 	tc := &testCollection{}
 	s.rc = tc
+
+	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12, Arrived: true})
+
+	err := s.processQueue(context.Background())
+	if err != nil {
+		t.Errorf("Error processing queue: %v", err)
+	}
+
+	if tc.addedRecord == nil || tc.addedRecord.Release.Id != 12 {
+		t.Errorf("Record was not added: %v", tc.addedRecord)
+	}
+}
+
+func TestBasicRunThroughWithFanoutFail(t *testing.T) {
+	s := InitTest()
+	tc := &testCollection{}
+	s.rc = tc
+	s.testingFail = true
 
 	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12, Arrived: true})
 
