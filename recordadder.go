@@ -88,9 +88,11 @@ type Server struct {
 // Init builds the server
 func Init() *Server {
 	s := &Server{
-		GoServer:    &goserver.GoServer{},
-		running:     true,
-		fanout:      []string{},
+		GoServer: &goserver.GoServer{},
+		running:  true,
+		fanout: []string{
+			"digitalwantlist",
+		},
 		testing:     false,
 		testingFail: false,
 	}
