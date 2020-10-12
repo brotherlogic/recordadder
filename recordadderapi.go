@@ -7,6 +7,8 @@ import (
 	"github.com/brotherlogic/goserver/utils"
 	pb "github.com/brotherlogic/recordadder/proto"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -35,7 +37,8 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 		// Use a new context for fanout
 		ctxfinner, cancelfinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
 		err := s.runFanout(ctxfinner, server, req.GetId())
-		if err != nil {
+		code := status.Convert(err)
+		if code.Code() != codes.OK || code.Code() != codes.Unavailable {
 			s.RaiseIssue(fmt.Sprintf("Fanout for %v failed", server), fmt.Sprintf("Error was %v", err))
 		}
 		cancelfinner()
