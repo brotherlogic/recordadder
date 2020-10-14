@@ -39,7 +39,7 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 		err := s.runFanout(ctxfinner, server, req.GetId())
 		code := status.Convert(err)
 		if code.Code() != codes.OK || code.Code() != codes.Unavailable {
-			s.RaiseIssue(fmt.Sprintf("Fanout for %v failed", server), fmt.Sprintf("Error was %v", err))
+			s.RaiseIssue(fmt.Sprintf("Fanout for %v failed", server), fmt.Sprintf("Error was %v (%v)", err, code.Code()))
 		}
 		cancelfinner()
 	}
