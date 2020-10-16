@@ -13,6 +13,8 @@ import (
 func InitTestServer() *Server {
 	s := Init()
 	s.SkipLog = true
+	s.SkipIssue = true
+	s.testing = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	s.GoServer.KSclient.Save(context.Background(), QUEUE, &pb.Queue{})
 	return s
