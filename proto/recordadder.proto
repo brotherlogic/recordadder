@@ -8,6 +8,7 @@ message Queue {
   repeated AddRecordRequest requests = 1;
   int32 processed_records = 2;
   int64 last_addition_date = 3;
+  int64 last_digital_addition = 4;
 }
 
 message AddRecordRequest {
