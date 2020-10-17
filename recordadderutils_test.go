@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	keystoreclient "github.com/brotherlogic/keystore/client"
 	rbpb "github.com/brotherlogic/recordbudget/proto"
 	"golang.org/x/net/context"
 
@@ -12,19 +11,6 @@ import (
 	pb "github.com/brotherlogic/recordadder/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
-
-func InitTest() *Server {
-	s := Init()
-	s.rc = &testCollection{}
-	s.budget = &testBudget{}
-	s.SkipLog = true
-	s.SkipIssue = true
-	s.GoServer.KSclient = *keystoreclient.GetTestClient("./testing")
-	s.GoServer.KSclient.Save(context.Background(), QUEUE, &pb.Queue{})
-	s.fanout = []string{"madeup1"}
-	s.testing = true
-	return s
-}
 
 type testCollection struct {
 	addedRecord *pbrc.Record
@@ -51,7 +37,7 @@ func (p *testCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 }
 
 func TestBasicRunThrough(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 	tc := &testCollection{}
 	s.rc = tc
 
@@ -68,7 +54,7 @@ func TestBasicRunThrough(t *testing.T) {
 }
 
 func TestBasicRunThroughWithFanoutFail(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 	tc := &testCollection{}
 	s.rc = tc
 	s.testingFail = true
@@ -86,7 +72,7 @@ func TestBasicRunThroughWithFanoutFail(t *testing.T) {
 }
 
 func TestBasicRunThroughWithBudgetFail(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 	tc := &testCollection{}
 	tb := &testBudget{fail: true}
 	s.budget = tb
@@ -101,7 +87,7 @@ func TestBasicRunThroughWithBudgetFail(t *testing.T) {
 }
 
 func TestEmptyRunThrough(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 
 	err := s.processQueue(context.Background())
 	if err != nil {
@@ -110,7 +96,7 @@ func TestEmptyRunThrough(t *testing.T) {
 }
 
 func TestBadReadRunThrough(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 	s.GoServer.KSclient.Fail = true
 
 	err := s.processQueue(context.Background())
@@ -121,7 +107,7 @@ func TestBadReadRunThrough(t *testing.T) {
 }
 
 func TestRunThroughWithAddFail(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 	tc := &testCollection{fail: true}
 	s.rc = tc
 
@@ -133,8 +119,21 @@ func TestRunThroughWithAddFail(t *testing.T) {
 	}
 }
 
+func TestRunThroughWithDigitalAddFail(t *testing.T) {
+	s := InitTestServer()
+	tc := &testCollection{fail: true}
+	s.rc = tc
+
+	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 242018, Cost: 12, Arrived: true})
+
+	err := s.processQueue(context.Background())
+	if err == nil {
+		t.Errorf("No error processing the queue with failing add")
+	}
+}
+
 func TestWithBadAdd(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 
 	s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: -1, Folder: 12, Cost: 12, Arrived: true})
 
@@ -145,7 +144,7 @@ func TestWithBadAdd(t *testing.T) {
 }
 
 func TestBasicRunThroughWithNoAction(t *testing.T) {
-	s := InitTest()
+	s := InitTestServer()
 	tc := &testCollection{}
 	s.rc = tc
 

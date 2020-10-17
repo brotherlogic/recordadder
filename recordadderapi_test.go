@@ -12,11 +12,15 @@ import (
 //InitTestServer gets a test version of the server
 func InitTestServer() *Server {
 	s := Init()
+	s.rc = &testCollection{}
+	s.budget = &testBudget{}
 	s.SkipLog = true
 	s.SkipIssue = true
-	s.testing = true
-	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
+	s.GoServer.KSclient = *keystoreclient.GetTestClient("./testing")
 	s.GoServer.KSclient.Save(context.Background(), QUEUE, &pb.Queue{})
+	s.fanout = []string{"madeup1"}
+	s.testing = true
+
 	return s
 }
 
@@ -30,6 +34,46 @@ func TestAddRequest(t *testing.T) {
 
 	if time.Now().After(time.Unix(val.ExpectedAdditionDate, 0)) {
 		t.Errorf("Time is not set correct: %v", val)
+	}
+}
+
+func TestAddDigitalRequest(t *testing.T) {
+	s := InitTestServer()
+
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Arrived: true})
+	if err != nil {
+		t.Fatalf("Add Record failed: %v", err)
+	}
+	_, err = s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 13, Folder: 242018, Arrived: true})
+	if err != nil {
+		t.Fatalf("Add Record failed: %v", err)
+	}
+
+	list, err := s.ListQueue(context.Background(), &pb.ListQueueRequest{})
+	if err != nil {
+		t.Fatalf("Error listing records: %v", err)
+	}
+
+	if len(list.GetRequests()) != 2 {
+		t.Fatalf("Two requests were not added: %v", list)
+	}
+
+	err = s.processQueue(context.Background())
+	if err != nil {
+		t.Errorf("Bad queue process: %v", err)
+	}
+	err = s.processQueue(context.Background())
+	if err != nil {
+		t.Errorf("Bad queue process: %v", err)
+	}
+
+	list, err = s.ListQueue(context.Background(), &pb.ListQueueRequest{})
+	if err != nil {
+		t.Fatalf("Error listing records: %v", err)
+	}
+
+	if len(list.GetRequests()) != 0 {
+		t.Fatalf("Two requests were not added: %v", list)
 	}
 }
 

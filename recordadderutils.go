@@ -24,8 +24,6 @@ func (s *Server) processQueue(ctx context.Context) error {
 
 	available := budget.GetBudget() - budget.GetSpends()
 	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v)", len(queue.Requests), available, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24))
-	time.Sleep(time.Second * 2)
-
 	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24 {
 		for i, req := range queue.GetRequests() {
 			if req.GetId() <= 0 || req.GetResetFolder() > 0 {
@@ -33,7 +31,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 				s.KSclient.Save(ctx, QUEUE, queue)
 				return fmt.Errorf("Bad entry in the queue")
 			}
-			if req.GetCost() < available && req.GetArrived() {
+			if !isDigital(req) && req.GetCost() < available && req.GetArrived() {
 				err = s.rc.addRecord(ctx, queue.Requests[i])
 				s.Log(fmt.Sprintf("Adding %v -> %v", queue.Requests[i], err))
 				if err != nil {
@@ -54,7 +52,45 @@ func (s *Server) processQueue(ctx context.Context) error {
 		}
 	}
 
-	s.Log(fmt.Sprintf("Still %v to go!", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0))))
+	err = s.runDigital(ctx, queue, available)
+	if err != nil {
+		return err
+	}
 
+	s.Log(fmt.Sprintf("Still %v to go (with digital %v) !", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)), err))
+
+	return nil
+}
+
+func isDigital(req *pb.AddRecordRequest) bool {
+	//Digital is CD, Bandcamp or Computer
+	return req.GetFolder() == 242018 ||
+		req.GetFolder() == 1782105 ||
+		req.GetFolder() == 2274270
+}
+
+func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int32) error {
+	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.GetLastDigitalAddition(), 0)) >= time.Hour*24 {
+		for i, req := range queue.GetRequests() {
+			if isDigital(req) && req.GetCost() < available && req.GetArrived() {
+				err := s.rc.addRecord(ctx, queue.Requests[i])
+				s.Log(fmt.Sprintf("DIGITAL Adding %v -> %v", queue.Requests[i], err))
+				if err != nil {
+					return fmt.Errorf("Error adding digital record: %v", err)
+				}
+
+				queue.LastDigitalAddition = time.Now().Unix()
+				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
+
+				// We need to refresh the context for the save since the fanout may have run out the clock
+				ctxinner, cancelinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
+				err = s.KSclient.Save(ctxinner, QUEUE, queue)
+				cancelinner()
+
+				return err
+			}
+			time.Sleep(time.Second * 5)
+		}
+	}
 	return nil
 }
