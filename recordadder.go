@@ -154,6 +154,13 @@ func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
 	return queue, nil
 }
 
+func min(t1, t2 time.Duration) time.Duration {
+	if t1 < t2 {
+		return t1
+	}
+	return t2
+}
+
 func (s *Server) runTimedTask() error {
 	time.Sleep(time.Second * 10)
 
@@ -165,11 +172,13 @@ func (s *Server) runTimedTask() error {
 		return err
 	}
 	for s.running {
-		time.Sleep(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour * 24).Sub(time.Now()))
+		minTime := min(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24).Sub(time.Now()))
+		s.Log(fmt.Sprintf("Sleeping for %v", minTime))
+		time.Sleep(minTime)
 		ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
 		queue, err = s.load(ctx)
 		cancel()
-		if err == nil && time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) {
+		if err == nil && (time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) || time.Now().After(time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24))) {
 
 			done, err := s.Elect()
 			if err == nil {
