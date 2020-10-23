@@ -23,7 +23,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 	}
 
 	available := budget.GetBudget() - budget.GetSpends()
-	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v)", len(queue.Requests), available, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24))
+	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v) -> %v", len(queue.Requests), available, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24, ctx))
 	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24 {
 		for i, req := range queue.GetRequests() {
 			if req.GetId() <= 0 || req.GetResetFolder() > 0 {
@@ -33,7 +33,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 			}
 			if !isDigital(req) && req.GetCost() < available && req.GetArrived() {
 				err = s.rc.addRecord(ctx, queue.Requests[i])
-				s.Log(fmt.Sprintf("Adding %v -> %v", queue.Requests[i], err))
+				s.Log(fmt.Sprintf("Adding (%v) %v -> %v", i, queue.Requests[i], err))
 				if err != nil {
 					return fmt.Errorf("Error adding record: %v", err)
 				}
@@ -48,7 +48,6 @@ func (s *Server) processQueue(ctx context.Context) error {
 
 				return err
 			}
-			time.Sleep(time.Second * 5)
 		}
 	}
 
@@ -89,7 +88,6 @@ func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int3
 
 				return err
 			}
-			time.Sleep(time.Second * 5)
 		}
 	}
 	return nil
