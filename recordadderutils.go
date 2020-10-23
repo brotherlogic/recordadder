@@ -33,7 +33,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 			}
 			if !isDigital(req) && req.GetCost() < available && req.GetArrived() {
 				err = s.rc.addRecord(ctx, queue.Requests[i])
-				s.Log(fmt.Sprintf("Adding %v -> %v", queue.Requests[i], err))
+				s.Log(fmt.Sprintf("Adding (%v) %v -> %v", i, queue.Requests[i], err))
 				if err != nil {
 					return fmt.Errorf("Error adding record: %v", err)
 				}
