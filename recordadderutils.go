@@ -48,7 +48,6 @@ func (s *Server) processQueue(ctx context.Context) error {
 
 				return err
 			}
-			time.Sleep(time.Second * 5)
 		}
 	}
 
@@ -89,7 +88,6 @@ func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int3
 
 				return err
 			}
-			time.Sleep(time.Second * 5)
 		}
 	}
 	return nil
