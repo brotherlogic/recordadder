@@ -151,7 +151,23 @@ func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
 		return nil, err
 	}
 	queue := data.(*pb.Queue)
+
+	s.validateQueue(ctx, queue)
+
 	return queue, nil
+}
+
+func (s *Server) validateQueue(ctx context.Context, queue *pb.Queue) {
+	for _, entry := range queue.GetRequests() {
+		if time.Now().Sub(time.Unix(entry.GetDateAdded(), 0)) > time.Hour*24*30 && !entry.GetArrived() {
+			s.RaiseIssue("Old record in add queue", fmt.Sprintf("%v is stale in the add queue", entry.GetId()))
+		}
+
+		if entry.GetDateAdded() == 0 {
+			entry.DateAdded = time.Now().Unix()
+		}
+	}
+
 }
 
 func min(t1, t2 time.Duration) time.Duration {

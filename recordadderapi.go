@@ -30,6 +30,8 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 		}
 	}
 
+	req.DateAdded = time.Now().Unix()
+
 	queue.Requests = append(queue.Requests, req)
 
 	// Run the fanout
