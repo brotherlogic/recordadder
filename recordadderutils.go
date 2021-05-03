@@ -21,7 +21,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		return err
 	}
 
-	available := budget.GetBudget() - budget.GetSpends()
+	available := budget.GetBudget() + budget.GetSolds() - budget.GetSpends()
 
 	lowest := int32(999999)
 	for _, entry := range queue.GetRequests() {

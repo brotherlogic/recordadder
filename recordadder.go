@@ -167,7 +167,6 @@ func (s *Server) validateQueue(ctx context.Context, queue *pb.Queue) {
 			entry.DateAdded = time.Now().Unix()
 		}
 	}
-
 }
 
 func min(t1, t2 time.Duration) time.Duration {
