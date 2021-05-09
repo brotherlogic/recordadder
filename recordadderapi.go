@@ -69,12 +69,18 @@ func (s *Server) UpdateRecord(ctx context.Context, req *pb.UpdateRecordRequest) 
 	}
 	queue := data.(*pb.Queue)
 
+	updated := false
 	for _, entry := range queue.Requests {
 		if entry.Id == req.Id {
 			if req.GetAvailable() {
 				entry.Arrived = true
+				updated = true
 			}
 		}
+	}
+
+	if !updated {
+		return nil, status.Errorf(codes.NotFound, "Unable to locate %v for update", req.GetId())
 	}
 
 	return &pb.UpdateRecordResponse{}, s.KSclient.Save(ctx, QUEUE, queue)
