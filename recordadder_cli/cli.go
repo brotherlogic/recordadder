@@ -21,7 +21,7 @@ func init() {
 }
 
 func main() {
-	ctx, cancel := utils.BuildContext("recordader-cli", "recordadder")
+	ctx, cancel := utils.ManualContext("recordader-cli", "recordadder", time.Second*10, false)
 	defer cancel()
 
 	conn, err := utils.LFDialServer(ctx, "recordadder")
