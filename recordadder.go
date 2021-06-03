@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"time"
 
 	"github.com/brotherlogic/goserver"
@@ -242,7 +241,7 @@ func main() {
 	go func() {
 		err := server.runTimedTask()
 		if err != nil {
-			os.Exit(1)
+			log.Fatalf("Unable to run timed task: %v", err)
 		}
 	}()
 
