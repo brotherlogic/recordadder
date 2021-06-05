@@ -178,25 +178,30 @@ func min(t1, t2 time.Duration) time.Duration {
 func (s *Server) runTimedTask() error {
 	time.Sleep(time.Second * 10)
 
-	ctx, cancel := utils.ManualContext("adder-load", "adder-load", time.Minute, true)
-	s.Log(fmt.Sprintf("First read"))
-	queue, err := s.load(ctx)
-	cancel()
-	if err != nil {
-		return err
+	var queue *pb.Queue
+	var err error
+	for true {
+		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
+		s.Log(fmt.Sprintf("First read"))
+		queue, err = s.load(ctx)
+		cancel()
+		if err == nil {
+			break
+		}
+		time.Sleep(time.Minute)
 	}
 	for s.running {
 		minTime := min(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24).Sub(time.Now()))
 		s.Log(fmt.Sprintf("Sleeping for %v", minTime))
 		time.Sleep(minTime)
-		ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
 		queue, err = s.load(ctx)
 		cancel()
 		if err == nil && (time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) || time.Now().After(time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24))) {
 
 			done, err := s.Elect()
 			if err == nil {
-				ctx, cancel = utils.ManualContext("adder-load", "adder-load", time.Minute, true)
+				ctx, cancel = utils.ManualContext("adder-load", time.Minute)
 				err := s.processQueue(ctx)
 				s.Log(fmt.Sprintf("Ran queue: %v", err))
 				cancel()

@@ -37,7 +37,7 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 	// Run the fanout
 	for _, server := range s.fanout {
 		// Use a new context for fanout
-		ctxfinner, cancelfinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
+		ctxfinner, cancelfinner := utils.ManualContext("rasave", time.Minute)
 		err := s.runFanout(ctxfinner, server, req.GetId())
 		code := status.Convert(err)
 		if code.Code() != codes.OK && code.Code() != codes.Unavailable {
