@@ -49,7 +49,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
 
 				// We need to refresh the context for the save since the fanout may have run out the clock
-				ctxinner, cancelinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
+				ctxinner, cancelinner := utils.ManualContext("rasave", time.Minute)
 				err = s.KSclient.Save(ctxinner, QUEUE, queue)
 				cancelinner()
 
@@ -89,7 +89,7 @@ func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int3
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
 
 				// We need to refresh the context for the save since the fanout may have run out the clock
-				ctxinner, cancelinner := utils.ManualContext("rasave", "rasave", time.Minute, true)
+				ctxinner, cancelinner := utils.ManualContext("rasave", time.Minute)
 				err = s.KSclient.Save(ctxinner, QUEUE, queue)
 				cancelinner()
 
