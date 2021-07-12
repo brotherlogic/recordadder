@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"time"
 
@@ -216,15 +215,9 @@ func (s *Server) runTimedTask() error {
 }
 
 func main() {
-	var quiet = flag.Bool("quiet", false, "Show all output")
-	var init = flag.Bool("init", false, "Prep server")
+	var run = flag.Bool("run", false, "Run the background adder")
 	flag.Parse()
 
-	//Turn off logging
-	if *quiet {
-		log.SetFlags(0)
-		log.SetOutput(ioutil.Discard)
-	}
 	server := Init()
 	server.PrepServer()
 	server.Register = server
@@ -234,21 +227,14 @@ func main() {
 		return
 	}
 
-	if *init {
-		ctx, cancel := utils.BuildContext("recordadder", "recordadder")
-		defer cancel()
-
-		err := server.KSclient.Save(ctx, QUEUE, &pb.Queue{ProcessedRecords: 1})
-		fmt.Printf("Initialised: %v\n", err)
-		return
+	if *run {
+		go func() {
+			err := server.runTimedTask()
+			if err != nil {
+				log.Fatalf("Unable to run timed task: %v", err)
+			}
+		}()
 	}
-
-	go func() {
-		err := server.runTimedTask()
-		if err != nil {
-			log.Fatalf("Unable to run timed task: %v", err)
-		}
-	}()
 
 	fmt.Printf("%v", server.Serve())
 }
