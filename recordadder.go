@@ -206,7 +206,8 @@ func (s *Server) runTimedTask() error {
 		queue, err = s.load(ctx)
 		cancel()
 		if err == nil && (time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) || time.Now().After(time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24))) {
-			done, err := s.RunLockingElection(ctx, "recordadder")
+			ctx2, cancel2 := utils.ManualContext("adder-lock", time.Minute)
+			done, err := s.RunLockingElection(ctx2, "recordadder")
 			if err == nil {
 				ctx, cancel = utils.ManualContext("adder-load", time.Minute)
 				err := s.processQueue(ctx)
@@ -215,7 +216,8 @@ func (s *Server) runTimedTask() error {
 			} else {
 				s.Log(fmt.Sprintf("Unable to get lock: %v", err))
 			}
-			s.ReleaseLockingElection(ctx, "recordadder", done)
+			s.ReleaseLockingElection(ctx2, "recordadder", done)
+			cancel2()
 		} else {
 			s.Log(fmt.Sprintf("Unable to get load: %v", err))
 		}
