@@ -207,14 +207,14 @@ func (s *Server) runTimedTask() error {
 		cancel()
 		if err == nil && (time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) || time.Now().After(time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24))) {
 
-			done, err := s.Elect()
+			done, err := s.RunLockingElection(ctx, "recordadder")
 			if err == nil {
 				ctx, cancel = utils.ManualContext("adder-load", time.Minute)
 				err := s.processQueue(ctx)
 				s.Log(fmt.Sprintf("Ran queue: %v", err))
 				cancel()
 			}
-			done()
+			s.ReleaseLockingElection(ctx, "recordadder", done)
 		}
 
 		time.Sleep(time.Minute)
