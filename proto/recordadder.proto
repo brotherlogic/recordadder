@@ -15,6 +15,7 @@ message Queue {
 message AddedRecord {
   int32 instance_id = 1;
   int64 date_added = 2;
+  int64 date_arrived = 3;
 }
 
 message AddRecordRequest {
