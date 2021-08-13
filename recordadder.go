@@ -141,7 +141,11 @@ func (s *Server) GetState() []*pbg.State {
 var (
 	backlog = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "recordadder_backlog",
-		Help: "The number of records we know of",
+		Help: "The number of records we know of that have arrived but we haven't moved yet",
+	})
+	purchased = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordadder_purchased",
+		Help: "The number of records we know of that haven't arrived",
 	})
 )
 
@@ -169,6 +173,7 @@ func (s *Server) validateQueue(ctx context.Context, queue *pb.Queue) {
 	}
 
 	backlog.Set(float64(len(queue.GetAdded())))
+	purchased.Set(float64(len(queue.GetRequests())))
 }
 
 func min(t1, t2 time.Duration) time.Duration {
