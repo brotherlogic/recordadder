@@ -213,8 +213,12 @@ func (s *Server) runTimedTask() error {
 				err := s.processQueue(ctx)
 				s.Log(fmt.Sprintf("Ran queue: %v", err))
 				cancel()
+			} else {
+				s.Log(fmt.Sprintf("Unable to get lock: %v", err))
 			}
 			s.ReleaseLockingElection(ctx, "recordadder", done)
+		} else {
+			s.Log(fmt.Sprintf("Unable to get load: %v", err))
 		}
 
 		time.Sleep(time.Minute)
