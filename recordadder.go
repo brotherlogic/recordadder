@@ -8,6 +8,8 @@ import (
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
@@ -136,6 +138,13 @@ func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{}
 }
 
+var (
+	backlog = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordadder_backlog",
+		Help: "The number of records we know of",
+	})
+)
+
 func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
@@ -158,6 +167,8 @@ func (s *Server) validateQueue(ctx context.Context, queue *pb.Queue) {
 			entry.DateAdded = time.Now().Unix()
 		}
 	}
+
+	backlog.Set(float64(len(queue.GetAdded())))
 }
 
 func min(t1, t2 time.Duration) time.Duration {
