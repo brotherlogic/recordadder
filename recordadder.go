@@ -224,7 +224,7 @@ func (s *Server) runTimedTask() error {
 }
 
 func main() {
-	var run = flag.Bool("run", false, "Run the background adder")
+	var run = flag.Bool("run", true, "Run the background adder")
 	flag.Parse()
 
 	server := Init()
