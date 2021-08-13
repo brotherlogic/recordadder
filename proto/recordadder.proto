@@ -9,6 +9,12 @@ message Queue {
   int32 processed_records = 2;
   int64 last_addition_date = 3;
   int64 last_digital_addition = 4;
+  repeated AddedRecord added = 5;
+} 
+
+message AddedRecord {
+  int32 instance_id = 1;
+  int64 date_added = 2;
 }
 
 message AddRecordRequest {

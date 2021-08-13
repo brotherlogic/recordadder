@@ -38,38 +38,31 @@ func (p *prodBudget) getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, er
 }
 
 type collection interface {
-	addRecord(ctx context.Context, r *pb.AddRecordRequest) error
+	addRecord(ctx context.Context, r *pb.AddRecordRequest) (int32, error)
 }
 
 type prodCollection struct {
 	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 }
 
-func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) error {
+func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) (int32, error) {
 	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
-		return err
+		return -1, err
 	}
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	// Vanilla Addition
-	if r.GetResetFolder() == 0 {
-		_, err = client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
-			Release:  &pbgd.Release{Id: r.Id},
-			Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder, AccountingYear: r.AccountingYear},
-		}})
-		return err
+	resp, err := client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
+		Release:  &pbgd.Release{Id: r.Id},
+		Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder, AccountingYear: r.AccountingYear},
+	}})
+	if err != nil {
+		return -1, err
 	}
+	return resp.GetAdded().GetRelease().GetInstanceId(), nil
 
-	// Folder reset
-	_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
-		Reason: "recordadder-folderupdate",
-		Update: &pbrc.Record{
-			Release:  &pbgd.Release{InstanceId: r.GetId()},
-			Metadata: &pbrc.ReleaseMetadata{GoalFolder: r.GetResetFolder(), SetRating: -1},
-		}})
-	return err
 }
 
 //Server main server type
