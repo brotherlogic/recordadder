@@ -200,13 +200,12 @@ func (s *Server) runTimedTask() error {
 	}
 	for s.running {
 		minTime := min(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24).Sub(time.Now()))
-		s.Log(fmt.Sprintf("Sleeping for %v", minTime))
+		s.Log(fmt.Sprintf("Internal Sleeping for %v", minTime))
 		time.Sleep(minTime)
 		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
 		queue, err = s.load(ctx)
 		cancel()
 		if err == nil && (time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) || time.Now().After(time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24))) {
-
 			done, err := s.RunLockingElection(ctx, "recordadder")
 			if err == nil {
 				ctx, cancel = utils.ManualContext("adder-load", time.Minute)
