@@ -31,7 +31,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 	}
 
 	s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v vs %v) -> %v", len(queue.Requests), available, lowest, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24, ctx))
-	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24 {
+	if len(queue.Requests) > 0 {
 		for i, req := range queue.GetRequests() {
 			if req.GetId() <= 0 || req.GetResetFolder() > 0 {
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)

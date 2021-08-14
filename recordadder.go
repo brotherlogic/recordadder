@@ -199,28 +199,22 @@ func (s *Server) runTimedTask() error {
 		time.Sleep(time.Minute)
 	}
 	for s.running {
-		minTime := min(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24).Sub(time.Now()), time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24).Sub(time.Now()))
-		s.Log(fmt.Sprintf("Internal Sleeping for %v", minTime))
-		time.Sleep(minTime)
+		time.Sleep(time.Minute)
 		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
 		queue, err = s.load(ctx)
-		cancel()
-		if err == nil && (time.Now().After(time.Unix(queue.LastAdditionDate, 0).Add(time.Hour*24)) || time.Now().After(time.Unix(queue.GetLastDigitalAddition(), 0).Add(time.Hour*24))) {
-			ctx2, cancel2 := utils.ManualContext("adder-lock", time.Minute)
-			done, err := s.RunLockingElection(ctx2, "recordadder")
+		if err == nil {
+			done, err := s.RunLockingElection(ctx, "recordadder")
 			if err == nil {
-				ctx, cancel = utils.ManualContext("adder-load", time.Minute)
 				err := s.processQueue(ctx)
 				s.Log(fmt.Sprintf("Ran queue: %v", err))
-				cancel()
 			} else {
 				s.Log(fmt.Sprintf("Unable to get lock: %v", err))
 			}
-			s.ReleaseLockingElection(ctx2, "recordadder", done)
-			cancel2()
+			s.ReleaseLockingElection(ctx, "recordadder", done)
 		} else {
 			s.Log(fmt.Sprintf("Unable to get load: %v", err))
 		}
+		cancel()
 
 		time.Sleep(time.Minute)
 	}
