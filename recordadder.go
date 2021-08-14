@@ -188,7 +188,7 @@ func (s *Server) runTimedTask() error {
 
 	for s.running {
 		time.Sleep(time.Minute)
-		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
+		ctx, cancel := utils.ManualContext("adder-load", time.Minute*10)
 
 		done, err := s.RunLockingElection(ctx, "recordadder")
 		if err == nil {
