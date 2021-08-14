@@ -186,34 +186,19 @@ func min(t1, t2 time.Duration) time.Duration {
 func (s *Server) runTimedTask() error {
 	time.Sleep(time.Second * 10)
 
-	var queue *pb.Queue
-	var err error
-	for true {
-		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
-		s.Log(fmt.Sprintf("First read"))
-		queue, err = s.load(ctx)
-		cancel()
-		if err == nil {
-			break
-		}
-		time.Sleep(time.Minute)
-	}
 	for s.running {
 		time.Sleep(time.Minute)
 		ctx, cancel := utils.ManualContext("adder-load", time.Minute)
-		queue, err = s.load(ctx)
+
+		done, err := s.RunLockingElection(ctx, "recordadder")
 		if err == nil {
-			done, err := s.RunLockingElection(ctx, "recordadder")
-			if err == nil {
-				err := s.processQueue(ctx)
-				s.Log(fmt.Sprintf("Ran queue: %v", err))
-			} else {
-				s.Log(fmt.Sprintf("Unable to get lock: %v", err))
-			}
-			s.ReleaseLockingElection(ctx, "recordadder", done)
+			err := s.processQueue(ctx)
+			s.Log(fmt.Sprintf("Ran queue: %v", err))
 		} else {
-			s.Log(fmt.Sprintf("Unable to get load: %v", err))
+			s.Log(fmt.Sprintf("Unable to get lock: %v", err))
 		}
+		s.ReleaseLockingElection(ctx, "recordadder", done)
+
 		cancel()
 
 		time.Sleep(time.Minute)
