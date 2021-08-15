@@ -38,7 +38,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 				s.KSclient.Save(ctx, QUEUE, queue)
 				return fmt.Errorf("Bad entry in the queue")
 			}
-			if !isDigital(req) && (req.GetCost() < available || int(req.GetAccountingYear()) != time.Now().Year()) && req.GetArrived() {
+			if !isDigital(req) {
 				iid, err := s.rc.addRecord(ctx, queue.Requests[i])
 				s.Log(fmt.Sprintf("Adding (%v) %v -> %v", i, queue.Requests[i], err))
 				if err != nil {
