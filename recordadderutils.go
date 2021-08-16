@@ -77,9 +77,9 @@ func isDigital(req *pb.AddRecordRequest) bool {
 }
 
 func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int32) error {
-	if len(queue.Requests) > 0 && time.Now().Sub(time.Unix(queue.GetLastDigitalAddition(), 0)) >= time.Hour*24 {
+	if len(queue.Requests) > 0 {
 		for i, req := range queue.GetRequests() {
-			if isDigital(req) && (req.GetCost() < available || int(req.GetAccountingYear()) != time.Now().Year()) && req.GetArrived() {
+			if isDigital(req) {
 				iid, err := s.rc.addRecord(ctx, queue.Requests[i])
 				s.Log(fmt.Sprintf("DIGITAL Adding %v -> %v", queue.Requests[i], err))
 				if err != nil {
