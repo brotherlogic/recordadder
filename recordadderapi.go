@@ -149,7 +149,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return recs[i].GetMetadata().GetDateAdded() < recs[j].GetMetadata().GetDateAdded()
 		})
 
-		s.Log(fmt.Sprintf("Found: %v", len(recs)))
+		s.Log(fmt.Sprintf("Found: %v with %v", len(recs), req.GetType()))
 
 		if len(recs) > 0 {
 			_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
