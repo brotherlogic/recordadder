@@ -117,53 +117,51 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		return nil, err
 	}
 
-	if val, ok := conf.GetAddedMap()[req.GetType()]; ok {
-		if time.Since(time.Unix(val, 0)) > time.Hour*24 {
-			s.Log("Adding!")
+	val, ok := conf.GetAddedMap()[req.GetType()]
+	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 {
+		s.Log("Adding!")
 
-			conn, err := s.FDialServer(ctx, "recordcollection")
-			if err != nil {
-				return nil, err
-			}
-			defer conn.Close()
+		conn, err := s.FDialServer(ctx, "recordcollection")
+		if err != nil {
+			return nil, err
+		}
+		defer conn.Close()
 
-			client := pbrc.NewRecordCollectionServiceClient(conn)
-			res, err := client.QueryRecords(ctx, &pbrc.QueryRecordsRequest{Query: &pbrc.QueryRecordsRequest_Category{Category: pbrc.ReleaseMetadata_ARRIVED}})
-			if err != nil {
-				return nil, err
-			}
+		client := pbrc.NewRecordCollectionServiceClient(conn)
+		res, err := client.QueryRecords(ctx, &pbrc.QueryRecordsRequest{Query: &pbrc.QueryRecordsRequest_Category{Category: pbrc.ReleaseMetadata_ARRIVED}})
+		if err != nil {
+			return nil, err
+		}
 
-			var recs []*pbrc.Record
-			for _, id := range res.GetInstanceIds() {
-				rec, err := client.GetRecord(ctx, &pbrc.GetRecordRequest{InstanceId: id})
-				if err != nil {
-					return nil, err
-				}
-
-				if rec.GetRecord().GetMetadata().GetFiledUnder().String() == req.GetType() {
-					recs = append(recs, rec.GetRecord())
-				}
-			}
-
-			sort.SliceStable(recs, func(i, j int) bool {
-				return recs[i].GetMetadata().GetDateAdded() < recs[j].GetMetadata().GetDateAdded()
-			})
-
-			_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
-				Reason: "Updating for addition",
-				Update: &pbrc.Record{Release: &pbgd.Release{InstanceId: recs[0].GetRelease().GetInstanceId()},
-					Metadata: &pbrc.ReleaseMetadata{Category: pbrc.ReleaseMetadata_UNLISTENED}},
-			})
+		var recs []*pbrc.Record
+		for _, id := range res.GetInstanceIds() {
+			rec, err := client.GetRecord(ctx, &pbrc.GetRecordRequest{InstanceId: id})
 			if err != nil {
 				return nil, err
 			}
 
-			conf.AddedMap[req.GetType()] = time.Now().Unix()
-			err = s.saveConfig(ctx, conf)
-			if err != nil {
-				return nil, err
+			if rec.GetRecord().GetMetadata().GetFiledUnder().String() == req.GetType() {
+				recs = append(recs, rec.GetRecord())
 			}
+		}
 
+		sort.SliceStable(recs, func(i, j int) bool {
+			return recs[i].GetMetadata().GetDateAdded() < recs[j].GetMetadata().GetDateAdded()
+		})
+
+		_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
+			Reason: "Updating for addition",
+			Update: &pbrc.Record{Release: &pbgd.Release{InstanceId: recs[0].GetRelease().GetInstanceId()},
+				Metadata: &pbrc.ReleaseMetadata{Category: pbrc.ReleaseMetadata_UNLISTENED}},
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		conf.AddedMap[req.GetType()] = time.Now().Unix()
+		err = s.saveConfig(ctx, conf)
+		if err != nil {
+			return nil, err
 		}
 	}
 
