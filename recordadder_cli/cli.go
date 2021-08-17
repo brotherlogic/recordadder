@@ -81,7 +81,16 @@ func main() {
 				fmt.Printf("Deleted: %v\n", err)
 			}
 		}
+	case "proc":
+		addFlags := flag.NewFlagSet("AddRecords", flag.ExitOnError)
+		var id = addFlags.String("id", "", "Name of the type")
 
+		if err := addFlags.Parse(os.Args[2:]); err == nil {
+			if *id != "" {
+				_, err := client.ProcAdded(ctx, &pb.ProcAddedRequest{Type: *id})
+				fmt.Printf("Processed: %v\n", err)
+			}
+		}
 	}
 
 }
