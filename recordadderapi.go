@@ -118,6 +118,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	}
 
 	val, ok := conf.GetAddedMap()[req.GetType()]
+	s.Log(fmt.Sprintf("ADDED MAP: %v", val))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 {
 		s.Log("Adding!")
 
