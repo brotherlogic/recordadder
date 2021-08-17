@@ -22,6 +22,7 @@ type AddRecordServiceClient interface {
 	ListQueue(ctx context.Context, in *ListQueueRequest, opts ...grpc.CallOption) (*ListQueueResponse, error)
 	UpdateRecord(ctx context.Context, in *UpdateRecordRequest, opts ...grpc.CallOption) (*UpdateRecordResponse, error)
 	DeleteRecord(ctx context.Context, in *DeleteRecordRequest, opts ...grpc.CallOption) (*DeleteRecordResponse, error)
+	ProcAdded(ctx context.Context, in *ProcAddedRequest, opts ...grpc.CallOption) (*ProcAddedResponse, error)
 }
 
 type addRecordServiceClient struct {
@@ -68,6 +69,15 @@ func (c *addRecordServiceClient) DeleteRecord(ctx context.Context, in *DeleteRec
 	return out, nil
 }
 
+func (c *addRecordServiceClient) ProcAdded(ctx context.Context, in *ProcAddedRequest, opts ...grpc.CallOption) (*ProcAddedResponse, error) {
+	out := new(ProcAddedResponse)
+	err := c.cc.Invoke(ctx, "/recordadder.AddRecordService/ProcAdded", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddRecordServiceServer is the server API for AddRecordService service.
 // All implementations should embed UnimplementedAddRecordServiceServer
 // for forward compatibility
@@ -76,6 +86,7 @@ type AddRecordServiceServer interface {
 	ListQueue(context.Context, *ListQueueRequest) (*ListQueueResponse, error)
 	UpdateRecord(context.Context, *UpdateRecordRequest) (*UpdateRecordResponse, error)
 	DeleteRecord(context.Context, *DeleteRecordRequest) (*DeleteRecordResponse, error)
+	ProcAdded(context.Context, *ProcAddedRequest) (*ProcAddedResponse, error)
 }
 
 // UnimplementedAddRecordServiceServer should be embedded to have forward compatible implementations.
@@ -93,6 +104,9 @@ func (UnimplementedAddRecordServiceServer) UpdateRecord(context.Context, *Update
 }
 func (UnimplementedAddRecordServiceServer) DeleteRecord(context.Context, *DeleteRecordRequest) (*DeleteRecordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRecord not implemented")
+}
+func (UnimplementedAddRecordServiceServer) ProcAdded(context.Context, *ProcAddedRequest) (*ProcAddedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProcAdded not implemented")
 }
 
 // UnsafeAddRecordServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -178,6 +192,24 @@ func _AddRecordService_DeleteRecord_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AddRecordService_ProcAdded_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcAddedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddRecordServiceServer).ProcAdded(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/recordadder.AddRecordService/ProcAdded",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddRecordServiceServer).ProcAdded(ctx, req.(*ProcAddedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AddRecordService_ServiceDesc is the grpc.ServiceDesc for AddRecordService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -200,6 +232,10 @@ var AddRecordService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteRecord",
 			Handler:    _AddRecordService_DeleteRecord_Handler,
+		},
+		{
+			MethodName: "ProcAdded",
+			Handler:    _AddRecordService_ProcAdded_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

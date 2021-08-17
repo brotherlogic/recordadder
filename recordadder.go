@@ -12,12 +12,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 
+	dspb "github.com/brotherlogic/dstore/proto"
 	pbgd "github.com/brotherlogic/godiscogs"
 	pbg "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/recordadder/proto"
 	rbpb "github.com/brotherlogic/recordbudget/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
+	google_protobuf "github.com/golang/protobuf/ptypes/any"
 )
 
 type budget interface {
@@ -202,6 +207,66 @@ func (s *Server) runTimedTask() error {
 		cancel()
 
 		time.Sleep(time.Minute)
+	}
+
+	return nil
+}
+
+const (
+	CONFIG_KEY = "github.com/brotherlogic/recordadder/moverconfig"
+)
+
+func (s *Server) loadConfig(ctx context.Context) (*pb.MoverConfig, error) {
+	conn, err := s.FDialServer(ctx, "dstore")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := dspb.NewDStoreServiceClient(conn)
+	res, err := client.Read(ctx, &dspb.ReadRequest{Key: CONFIG_KEY})
+	if err != nil {
+		if status.Convert(err).Code() == codes.NotFound {
+			return &pb.MoverConfig{AddedMap: make(map[string]int64)}, nil
+		}
+
+		return nil, err
+
+	}
+
+	if res.GetConsensus() < 0.5 {
+		return nil, fmt.Errorf("could not get read consensus (%v)", res.GetConsensus())
+	}
+
+	config := &pb.MoverConfig{}
+	err = proto.Unmarshal(res.GetValue().GetValue(), config)
+	if err != nil {
+		return nil, err
+	}
+
+	return config, nil
+}
+
+func (s *Server) saveConfig(ctx context.Context, config *pb.MoverConfig) error {
+	conn, err := s.FDialServer(ctx, "dstore")
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	data, err := proto.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	client := dspb.NewDStoreServiceClient(conn)
+	res, err := client.Write(ctx, &dspb.WriteRequest{Key: CONFIG_KEY, Value: &google_protobuf.Any{Value: data}})
+	if err != nil {
+		return err
+	}
+
+	if res.GetConsensus() < 0.5 {
+		return fmt.Errorf("could not get read consensus (%v)", res.GetConsensus())
 	}
 
 	return nil

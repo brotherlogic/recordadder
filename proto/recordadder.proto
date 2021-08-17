@@ -12,6 +12,10 @@ message Queue {
   repeated AddedRecord added = 5;
 } 
 
+message MoverConfig {
+  map<string, int64> added_map = 1;
+}
+
 message AddedRecord {
   int32 instance_id = 1;
   int64 date_added = 2;
@@ -52,11 +56,17 @@ message DeleteRecordRequest{
 
 message DeleteRecordResponse{}
 
+message ProcAddedRequest{
+  string type = 1;
+}
+message ProcAddedResponse{}
+
 service AddRecordService {
   rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {};
   rpc ListQueue(ListQueueRequest) returns (ListQueueResponse) {};
   rpc UpdateRecord(UpdateRecordRequest) returns (UpdateRecordResponse) {};
   rpc DeleteRecord(DeleteRecordRequest) returns (DeleteRecordResponse) {};
+  rpc ProcAdded(ProcAddedRequest) returns (ProcAddedResponse) {};
 }
 
 message ClientAddUpdateRequest {
