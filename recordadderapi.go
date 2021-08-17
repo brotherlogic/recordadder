@@ -151,19 +151,21 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 
 		s.Log(fmt.Sprintf("Found: %v", len(recs)))
 
-		_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
-			Reason: "Updating for addition",
-			Update: &pbrc.Record{Release: &pbgd.Release{InstanceId: recs[0].GetRelease().GetInstanceId()},
-				Metadata: &pbrc.ReleaseMetadata{Category: pbrc.ReleaseMetadata_UNLISTENED}},
-		})
-		if err != nil {
-			return nil, err
-		}
+		if len(recs) > 0 {
+			_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
+				Reason: "Updating for addition",
+				Update: &pbrc.Record{Release: &pbgd.Release{InstanceId: recs[0].GetRelease().GetInstanceId()},
+					Metadata: &pbrc.ReleaseMetadata{Category: pbrc.ReleaseMetadata_UNLISTENED}},
+			})
+			if err != nil {
+				return nil, err
+			}
 
-		conf.AddedMap[req.GetType()] = time.Now().Unix()
-		err = s.saveConfig(ctx, conf)
-		if err != nil {
-			return nil, err
+			conf.AddedMap[req.GetType()] = time.Now().Unix()
+			err = s.saveConfig(ctx, conf)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
