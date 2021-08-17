@@ -149,7 +149,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return recs[i].GetMetadata().GetDateAdded() < recs[j].GetMetadata().GetDateAdded()
 		})
 
-		s.Log(fmt.Sprintf("Found: %v -> %v", len(recs), recs[0].GetRelease().GetTitle()))
+		s.Log(fmt.Sprintf("Found: %v", len(recs)))
 
 		_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
 			Reason: "Updating for addition",
