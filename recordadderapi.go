@@ -178,9 +178,9 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 
 		runTime := time.Unix(val, 0).Add(time.Hour * 24).Unix()
 
-		conn2, err := s.FDialServer(ctx, "queue")
-		if err != nil {
-			return nil, err
+		conn2, err2 := s.FDialServer(ctx, "queue")
+		if err2 != nil {
+			return nil, err2
 		}
 		defer conn2.Close()
 		qclient := qpb.NewQueueServiceClient(conn)
