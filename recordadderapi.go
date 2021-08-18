@@ -7,11 +7,14 @@ import (
 
 	"github.com/brotherlogic/goserver/utils"
 	pb "github.com/brotherlogic/recordadder/proto"
+	google_protobuf "github.com/golang/protobuf/ptypes/any"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 
 	pbgd "github.com/brotherlogic/godiscogs"
+	qpb "github.com/brotherlogic/queue/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
 
@@ -170,5 +173,22 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		}
 	}
 
-	return &pb.ProcAddedResponse{}, nil
+	conn, err := s.FDialServer(ctx, "queue")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+	qclient := qpb.NewQueueServiceClient(conn)
+	upup := &pb.ProcAddedRequest{
+		Type: req.GetType(),
+	}
+	data, _ := proto.Marshal(upup)
+	_, err = qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
+		QueueName: "record_adder",
+		RunTime:   time.Unix(val, 0).Add(time.Hour * 24).Unix(),
+		Payload:   &google_protobuf.Any{Value: data},
+		Key:       fmt.Sprintf("%v", req.GetType()),
+	})
+
+	return &pb.ProcAddedResponse{}, err
 }
