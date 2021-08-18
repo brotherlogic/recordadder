@@ -115,9 +115,9 @@ func (s *Server) DeleteRecord(ctx context.Context, req *pb.DeleteRecordRequest) 
 
 //ProcAdded processes the added queue
 func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.ProcAddedResponse, error) {
-	conf, err := s.loadConfig(ctx)
-	if err != nil {
-		return nil, err
+	conf, err3 := s.loadConfig(ctx)
+	if err3 != nil {
+		return nil, err3
 	}
 
 	val, ok := conf.GetAddedMap()[req.GetType()]
@@ -188,7 +188,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			Type: req.GetType(),
 		}
 		data, _ := proto.Marshal(upup)
-		_, err = qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
+		_, err3 = qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
 			QueueName: "record_adder",
 			RunTime:   runTime,
 			Payload:   &google_protobuf.Any{Value: data},
@@ -196,5 +196,5 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		})
 	}
 
-	return &pb.ProcAddedResponse{}, err
+	return &pb.ProcAddedResponse{}, err3
 }
