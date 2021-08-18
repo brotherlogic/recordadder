@@ -171,24 +171,30 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 				return nil, err
 			}
 		}
-	}
 
-	conn, err := s.FDialServer(ctx, "queue")
-	if err != nil {
-		return nil, err
+		if len(recs) <= 1 {
+			val = time.Now().Unix()
+		}
+
+		runTime := time.Unix(val, 0).Add(time.Hour * 24).Unix()
+
+		conn2, err := s.FDialServer(ctx, "queue")
+		if err != nil {
+			return nil, err
+		}
+		defer conn2.Close()
+		qclient := qpb.NewQueueServiceClient(conn)
+		upup := &pb.ProcAddedRequest{
+			Type: req.GetType(),
+		}
+		data, _ := proto.Marshal(upup)
+		_, err = qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
+			QueueName: "record_adder",
+			RunTime:   runTime,
+			Payload:   &google_protobuf.Any{Value: data},
+			Key:       fmt.Sprintf("%v", req.GetType()),
+		})
 	}
-	defer conn.Close()
-	qclient := qpb.NewQueueServiceClient(conn)
-	upup := &pb.ProcAddedRequest{
-		Type: req.GetType(),
-	}
-	data, _ := proto.Marshal(upup)
-	_, err = qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
-		QueueName: "record_adder",
-		RunTime:   time.Unix(val, 0).Add(time.Hour * 24).Unix(),
-		Payload:   &google_protobuf.Any{Value: data},
-		Key:       fmt.Sprintf("%v", req.GetType()),
-	})
 
 	return &pb.ProcAddedResponse{}, err
 }
