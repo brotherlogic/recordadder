@@ -183,7 +183,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return nil, err2
 		}
 		defer conn2.Close()
-		qclient := qpb.NewQueueServiceClient(conn)
+		qclient := qpb.NewQueueServiceClient(conn2)
 		upup := &pb.ProcAddedRequest{
 			Type: req.GetType(),
 		}
