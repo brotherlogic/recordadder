@@ -173,7 +173,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		}
 
 		if len(recs) <= 1 {
-			val = time.Now().Unix()
+			val = time.Now().Add(time.Hour).Unix()
 		}
 
 		runTime := time.Unix(val, 0).Add(time.Hour * 24).Unix()
