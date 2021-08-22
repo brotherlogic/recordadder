@@ -121,9 +121,9 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	}
 
 	val, ok := conf.GetAddedMap()[req.GetType()]
-	s.Log(fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
+	//s.Log(fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 {
-		s.Log("Adding!")
+		//s.Log("Adding!")
 
 		conn, err := s.FDialServer(ctx, "recordcollection")
 		if err != nil {
@@ -153,14 +153,14 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return recs[i].GetMetadata().GetDateAdded() < recs[j].GetMetadata().GetDateAdded()
 		})
 
-		s.Log(fmt.Sprintf("Found: %v with %v", len(recs), req.GetType()))
-
 		if len(recs) > 0 {
 			_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
 				Reason: "Updating for addition",
 				Update: &pbrc.Record{Release: &pbgd.Release{InstanceId: recs[0].GetRelease().GetInstanceId()},
 					Metadata: &pbrc.ReleaseMetadata{Category: pbrc.ReleaseMetadata_UNLISTENED}},
 			})
+			s.Log(fmt.Sprintf("RFOUND: %v with %v: %v", len(recs), req.GetType(), err))
+
 			if err != nil {
 				return nil, err
 			}
@@ -176,7 +176,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			val = time.Now().Add(time.Hour).Unix()
 		}
 
-		runTime := time.Unix(val, 0).Add(time.Hour * 24).Unix()
+		runTime := time.Unix(val, 0).Add(time.Hour * 24 * 2).Unix()
 
 		conn2, err2 := s.FDialServer(ctx, "queue")
 		if err2 != nil {
