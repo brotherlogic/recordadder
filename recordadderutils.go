@@ -64,7 +64,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		return err
 	}
 
-	s.Log(fmt.Sprintf("Still %v to go (with digital %v) !", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)), err))
+	//s.Log(fmt.Sprintf("Still %v to go (with digital %v) !", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)), err))
 
 	return nil
 }
