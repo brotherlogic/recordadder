@@ -197,5 +197,5 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		return &pb.ProcAddedResponse{}, err3
 	}
 
-	return nil, fmt.Errorf("nothing to add here until %v", time.Since(time.Unix(val, 0)) > time.Hour*24)
+	return nil, fmt.Errorf("nothing to add here until %v", time.Since(time.Unix(val, 0)))
 }
