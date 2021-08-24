@@ -194,7 +194,8 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			Payload:   &google_protobuf.Any{Value: data},
 			Key:       fmt.Sprintf("%v", req.GetType()),
 		})
+		return &pb.ProcAddedResponse{}, err3
 	}
 
-	return &pb.ProcAddedResponse{}, err3
+	return nil, fmt.Errorf("nothing to add here until %v", time.Since(time.Unix(val, 0)) > time.Hour*24)
 }
