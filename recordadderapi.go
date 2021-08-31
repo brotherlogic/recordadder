@@ -197,5 +197,5 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		return &pb.ProcAddedResponse{}, err3
 	}
 
-	return nil, status.Errorf(codes.FailedPrecondition, "nothing to add here (%v) until %v", req.GetType(), time.Since(time.Unix(val, 0)))
+	return nil, status.Errorf(codes.FailedPrecondition, "there is nothing to add here (%v) until %v", req.GetType(), time.Since(time.Unix(val, 0)))
 }
