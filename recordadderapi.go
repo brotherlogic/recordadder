@@ -170,13 +170,14 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			if err != nil {
 				return nil, err
 			}
+			val = time.Now().Add(time.Hour * 24).Unix()
 		}
 
 		if len(recs) <= 1 {
 			val = time.Now().Add(time.Hour).Unix()
 		}
 
-		runTime := time.Unix(val, 0).Add(time.Hour * 24 * 2).Unix()
+		runTime := val
 
 		conn2, err2 := s.FDialServer(ctx, "queue")
 		if err2 != nil {
