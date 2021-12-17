@@ -30,6 +30,7 @@ message AddRecordRequest {
   int32 reset_folder = 4;
   bool arrived = 6;
   int64 date_added = 7;
+  string purchase_location = 8;
 }
 
 message AddRecordResponse {

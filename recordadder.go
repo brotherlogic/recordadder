@@ -61,9 +61,20 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	// Vanilla Addition
+	var pl pbrc.ReleaseMetadata_PurchaseLocation
+	switch r.GetPurchaseLocation() {
+	case "amoeba":
+		pl = pbrc.ReleaseMetadata_AMOEBA
+	case "hercules":
+		pl = pbrc.ReleaseMetadata_HERCULES
+	case "stranded":
+		pl = pbrc.ReleaseMetadata_STRANDED
+	default:
+		return -1, fmt.Errorf("Unknown location %v", r.GetPurchaseLocation())
+	}
 	resp, err := client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
 		Release:  &pbgd.Release{Id: r.Id},
-		Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder, AccountingYear: r.AccountingYear},
+		Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder, AccountingYear: r.AccountingYear, PurchaseLocation: pl},
 	}})
 	if err != nil {
 		return -1, err

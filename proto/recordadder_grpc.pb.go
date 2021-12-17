@@ -11,7 +11,6 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-// Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
 // AddRecordServiceClient is the client API for AddRecordService service.
@@ -117,7 +116,7 @@ type UnsafeAddRecordServiceServer interface {
 }
 
 func RegisterAddRecordServiceServer(s grpc.ServiceRegistrar, srv AddRecordServiceServer) {
-	s.RegisterService(&AddRecordService_ServiceDesc, srv)
+	s.RegisterService(&_AddRecordService_serviceDesc, srv)
 }
 
 func _AddRecordService_AddRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -210,10 +209,7 @@ func _AddRecordService_ProcAdded_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-// AddRecordService_ServiceDesc is the grpc.ServiceDesc for AddRecordService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var AddRecordService_ServiceDesc = grpc.ServiceDesc{
+var _AddRecordService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "recordadder.AddRecordService",
 	HandlerType: (*AddRecordServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
@@ -289,7 +285,7 @@ type UnsafeClientAddUpdateServiceServer interface {
 }
 
 func RegisterClientAddUpdateServiceServer(s grpc.ServiceRegistrar, srv ClientAddUpdateServiceServer) {
-	s.RegisterService(&ClientAddUpdateService_ServiceDesc, srv)
+	s.RegisterService(&_ClientAddUpdateService_serviceDesc, srv)
 }
 
 func _ClientAddUpdateService_ClientAddUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -310,10 +306,7 @@ func _ClientAddUpdateService_ClientAddUpdate_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-// ClientAddUpdateService_ServiceDesc is the grpc.ServiceDesc for ClientAddUpdateService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var ClientAddUpdateService_ServiceDesc = grpc.ServiceDesc{
+var _ClientAddUpdateService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "recordadder.ClientAddUpdateService",
 	HandlerType: (*ClientAddUpdateServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
