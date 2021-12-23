@@ -69,6 +69,8 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 		pl = pbrc.ReleaseMetadata_HERCULES
 	case "stranded":
 		pl = pbrc.ReleaseMetadata_STRANDED
+	case "discogs":
+		pl = pbrc.ReleaseMetadata_DISCOGS
 	default:
 		return -1, fmt.Errorf("Unknown location %v", r.GetPurchaseLocation())
 	}
