@@ -26,7 +26,7 @@ const (
 //AddRecord adds a record into the system
 func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.AddRecordResponse, error) {
 	if req.GetPurchaseLocation() != "amoeba" && req.GetPurchaseLocation() != "stranded" && req.GetPurchaseLocation() != "hercules" && req.GetPurchaseLocation() != "discogs" {
-		return nil, fmt.Errorf("Bad purchase location :%v", req.GetPurchaseLocation())
+		return nil, fmt.Errorf("Bad purchase location: %v", req.GetPurchaseLocation())
 	}
 
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
