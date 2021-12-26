@@ -25,7 +25,12 @@ const (
 
 //AddRecord adds a record into the system
 func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.AddRecordResponse, error) {
-	if req.GetPurchaseLocation() != "amoeba" && req.GetPurchaseLocation() != "stranded" && req.GetPurchaseLocation() != "hercules" && req.GetPurchaseLocation() != "discogs" && req.GetPurchaseLocation() != "gift" {
+	if req.GetPurchaseLocation() != "amoeba" &&
+		req.GetPurchaseLocation() != "stranded" &&
+		req.GetPurchaseLocation() != "hercules" &&
+		req.GetPurchaseLocation() != "discogs" &&
+		req.GetPurchaseLocation() != "gift" &&
+		req.GetPurchaseLocation() != "bandcamp" {
 		return nil, fmt.Errorf("Bad purchase location: %v", req.GetPurchaseLocation())
 	}
 
