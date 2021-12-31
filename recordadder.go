@@ -75,6 +75,8 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 		pl = pbrc.ReleaseMetadata_GIFT
 	case "bandcamp":
 		pl = pbrc.ReleaseMetadata_PBANDCAMP
+	case "download":
+		pl = pbrc.ReleaseMetadata_DOWNLOAD
 	default:
 		return -1, fmt.Errorf("Unknown location %v", r.GetPurchaseLocation())
 	}
