@@ -202,10 +202,11 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		}
 		data, _ := proto.Marshal(upup)
 		_, err3 = qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
-			QueueName: "record_adder",
-			RunTime:   runTime,
-			Payload:   &google_protobuf.Any{Value: data},
-			Key:       fmt.Sprintf("%v", req.GetType()),
+			QueueName:     "record_adder",
+			RunTime:       runTime,
+			Payload:       &google_protobuf.Any{Value: data},
+			Key:           fmt.Sprintf("%v", req.GetType()),
+			RequireUnique: true,
 		})
 		return &pb.ProcAddedResponse{}, err3
 	}
