@@ -81,6 +81,8 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 		pl = pbrc.ReleaseMetadata_CHERRY_RED
 	case "bleep":
 		pl = pbrc.ReleaseMetadata_BLEEP
+	case "direct":
+		pl = pbrc.ReleaseMetadata_DIRECT
 	default:
 		return -1, fmt.Errorf("Unknown location %v", r.GetPurchaseLocation())
 	}
