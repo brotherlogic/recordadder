@@ -1,6 +1,6 @@
 module github.com/brotherlogic/recordadder
 
-go 1.13
+go 1.16
 
 require (
 	github.com/brotherlogic/dstore v0.0.0-20220619031907-31d4fd2446ca
@@ -13,7 +13,6 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/prometheus/client_golang v1.12.2
 	golang.org/x/net v0.0.0-20220621193019-9d032be2e588
-	google.golang.org/genproto v0.0.0-20220621134657-43db42f103f7 // indirect
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0
 )
