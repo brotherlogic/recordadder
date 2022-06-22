@@ -35,6 +35,7 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 		req.GetPurchaseLocation() != "cherry" &&
 		req.GetPurchaseLocation() != "bleep" &&
 		req.GetPurchaseLocation() != "groovemerchant" &&
+		req.GetPurchaseLocation() != "sacredbones" &&
 		req.GetPurchaseLocation() != "direct" {
 		return nil, fmt.Errorf("Bad purchase location: %v", req.GetPurchaseLocation())
 	}

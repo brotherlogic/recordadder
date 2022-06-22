@@ -85,6 +85,8 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 		pl = pbrc.ReleaseMetadata_DIRECT
 	case "groovemerchant":
 		pl = pbrc.ReleaseMetadata_GROOVE_MERCHANT
+	case "sacredbones":
+		pl = pbrc.ReleaseMetadata_SACRED_BONES
 	default:
 		return -1, fmt.Errorf("Unknown location %v", r.GetPurchaseLocation())
 	}
@@ -220,7 +222,7 @@ func (s *Server) runTimedTask() error {
 		time.Sleep(time.Minute)
 		ctx, cancel := utils.ManualContext("adder-load", time.Minute*10)
 
-		done, err := s.RunLockingElection(ctx, "recordadder")
+		done, err := s.RunLockingElection(ctx, "recordadder", "Locking to add a record")
 		if err == nil {
 			err := s.processQueue(ctx)
 			s.Log(fmt.Sprintf("Ran queue: %v", err))
