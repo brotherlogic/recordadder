@@ -179,6 +179,10 @@ var (
 		Name: "recordadder_purchased",
 		Help: "The number of records we know of that haven't arrived",
 	})
+	added = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "recordadder_last_add",
+		Help: "The last addition for each type",
+	}, []string{"type"})
 )
 
 func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
@@ -269,6 +273,10 @@ func (s *Server) loadConfig(ctx context.Context) (*pb.MoverConfig, error) {
 	err = proto.Unmarshal(res.GetValue().GetValue(), config)
 	if err != nil {
 		return nil, err
+	}
+
+	for t, d := range config.GetAddedMap() {
+		added.With(prometheus.Labels{"type": t}).Set(float64(d))
 	}
 
 	return config, nil

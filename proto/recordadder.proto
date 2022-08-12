@@ -10,6 +10,7 @@ message Queue {
   int64 last_addition_date = 3;
   int64 last_digital_addition = 4;
   repeated AddedRecord added = 5;
+  map<string, int64> last_added = 6;
 } 
 
 message MoverConfig {
