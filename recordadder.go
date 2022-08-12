@@ -61,32 +61,32 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	// Vanilla Addition
-	var pl pbrc.ReleaseMetadata_PurchaseLocation
+	var pl pbrc.PurchaseLocation
 	switch r.GetPurchaseLocation() {
 	case "amoeba":
-		pl = pbrc.ReleaseMetadata_AMOEBA
+		pl = pbrc.PurchaseLocation_AMOEBA
 	case "hercules":
-		pl = pbrc.ReleaseMetadata_HERCULES
+		pl = pbrc.PurchaseLocation_HERCULES
 	case "stranded":
-		pl = pbrc.ReleaseMetadata_STRANDED
+		pl = pbrc.PurchaseLocation_STRANDED
 	case "discogs":
-		pl = pbrc.ReleaseMetadata_DISCOGS
+		pl = pbrc.PurchaseLocation_DISCOGS
 	case "gift":
-		pl = pbrc.ReleaseMetadata_GIFT
+		pl = pbrc.PurchaseLocation_GIFT
 	case "bandcamp":
-		pl = pbrc.ReleaseMetadata_PBANDCAMP
+		pl = pbrc.PurchaseLocation_PBANDCAMP
 	case "download":
-		pl = pbrc.ReleaseMetadata_DOWNLOAD
+		pl = pbrc.PurchaseLocation_DOWNLOAD
 	case "cherry":
-		pl = pbrc.ReleaseMetadata_CHERRY_RED
+		pl = pbrc.PurchaseLocation_CHERRY_RED
 	case "bleep":
-		pl = pbrc.ReleaseMetadata_BLEEP
+		pl = pbrc.PurchaseLocation_BLEEP
 	case "direct":
-		pl = pbrc.ReleaseMetadata_DIRECT
+		pl = pbrc.PurchaseLocation_DIRECT
 	case "groovemerchant":
-		pl = pbrc.ReleaseMetadata_GROOVE_MERCHANT
+		pl = pbrc.PurchaseLocation_GROOVE_MERCHANT
 	case "sacredbones":
-		pl = pbrc.ReleaseMetadata_SACRED_BONES
+		pl = pbrc.PurchaseLocation_SACRED_BONES
 	default:
 		return -1, fmt.Errorf("Unknown location %v", r.GetPurchaseLocation())
 	}
@@ -304,10 +304,10 @@ func main() {
 	flag.Parse()
 
 	server := Init()
-	server.PrepServer()
+	server.PrepServer("recordadder")
 	server.Register = server
 
-	err := server.RegisterServerV2("recordadder", false, true)
+	err := server.RegisterServerV2(false)
 	if err != nil {
 		return
 	}
