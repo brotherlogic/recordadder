@@ -30,7 +30,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		}
 	}
 
-	//s.Log(fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v vs %v) -> %v", len(queue.Requests), available, lowest, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24, ctx))
+	//s.CtxLog(ctx,fmt.Sprintf("Found %v entries in the queue with %v in the budget (%v vs %v) -> %v", len(queue.Requests), available, lowest, time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)) >= time.Hour*24, ctx))
 	if len(queue.Requests) > 0 {
 		for i, req := range queue.GetRequests() {
 			if req.GetId() <= 0 || req.GetResetFolder() > 0 {
@@ -40,7 +40,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 			}
 			if !isDigital(req) {
 				iid, err := s.rc.addRecord(ctx, queue.Requests[i])
-				s.Log(fmt.Sprintf("Adding (%v) %v -> %v", i, queue.Requests[i], err))
+				s.CtxLog(ctx, fmt.Sprintf("Adding (%v) %v -> %v", i, queue.Requests[i], err))
 				if err != nil {
 					return fmt.Errorf("Error adding record: %v", err)
 				}
@@ -64,7 +64,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		return err
 	}
 
-	//s.Log(fmt.Sprintf("Still %v to go (with digital %v) !", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)), err))
+	//s.CtxLog(ctx,fmt.Sprintf("Still %v to go (with digital %v) !", time.Now().Sub(time.Unix(queue.LastAdditionDate, 0)), err))
 
 	return nil
 }
@@ -81,7 +81,7 @@ func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int3
 		for i, req := range queue.GetRequests() {
 			if isDigital(req) {
 				iid, err := s.rc.addRecord(ctx, queue.Requests[i])
-				s.Log(fmt.Sprintf("DIGITAL Adding %v -> %v", queue.Requests[i], err))
+				s.CtxLog(ctx, fmt.Sprintf("DIGITAL Adding %v -> %v", queue.Requests[i], err))
 				if err != nil {
 					return fmt.Errorf("Error adding digital record: %v", err)
 				}

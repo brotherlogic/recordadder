@@ -136,9 +136,9 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	}
 
 	val, ok := conf.GetAddedMap()[req.GetType()]
-	//s.Log(fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
+	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 {
-		//s.Log("Adding!")
+		//s.CtxLog(ctx,"Adding!")
 
 		conn, err := s.FDialServer(ctx, "recordcollection")
 		if err != nil {
@@ -174,7 +174,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 				Update: &pbrc.Record{Release: &pbgd.Release{InstanceId: recs[0].GetRelease().GetInstanceId()},
 					Metadata: &pbrc.ReleaseMetadata{Category: pbrc.ReleaseMetadata_UNLISTENED}},
 			})
-			s.Log(fmt.Sprintf("RFOUND: %v with %v: %v", len(recs), req.GetType(), err))
+			s.CtxLog(ctx, fmt.Sprintf("RFOUND: %v with %v: %v", len(recs), req.GetType(), err))
 
 			if err != nil {
 				return nil, err

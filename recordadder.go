@@ -229,9 +229,9 @@ func (s *Server) runTimedTask() error {
 		done, err := s.RunLockingElection(ctx, "recordadder", "Locking to add a record")
 		if err == nil {
 			err := s.processQueue(ctx)
-			s.Log(fmt.Sprintf("Ran queue: %v", err))
+			s.CtxLog(ctx, fmt.Sprintf("Ran queue: %v", err))
 		} else {
-			s.Log(fmt.Sprintf("Unable to get lock: %v", err))
+			s.CtxLog(ctx, fmt.Sprintf("Unable to get lock: %v", err))
 		}
 		s.ReleaseLockingElection(ctx, "recordadder", done)
 
