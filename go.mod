@@ -3,18 +3,20 @@ module github.com/brotherlogic/recordadder
 go 1.16
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20221014020552-36060f4a0982 // indirect
-	github.com/brotherlogic/dstore v0.0.0-20220920131721-8bffcde17e97
-	github.com/brotherlogic/godiscogs v0.0.0-20221008131707-6944ba63cf54
-	github.com/brotherlogic/goserver v0.0.0-20221013151047-c298341b30b6
-	github.com/brotherlogic/keystore v0.0.0-20220919100110-299b209de552
-	github.com/brotherlogic/queue v0.0.0-20221010000046-12275de2f1b7
-	github.com/brotherlogic/recordbudget v0.0.0-20221012145636-ad85ffca7f09
-	github.com/brotherlogic/recordcollection v0.0.0-20221015234647-488411d218cc
+	github.com/brotherlogic/buildserver v0.0.0-20221106163924-62d984336757 // indirect
+	github.com/brotherlogic/discovery v0.0.0-20221102131626-ad0701835a27 // indirect
+	github.com/brotherlogic/dstore v0.0.0-20221102144812-76282d61ef80
+	github.com/brotherlogic/gobuildslave v0.0.0-20221102013257-50e8875754ff // indirect
+	github.com/brotherlogic/godiscogs v0.0.0-20221025153630-9ad31d9fab21
+	github.com/brotherlogic/goserver v0.0.0-20221106165541-0672428e3628
+	github.com/brotherlogic/keystore v0.0.0-20221031212034-42f2c05dff54
+	github.com/brotherlogic/queue v0.0.0-20221104164935-ced4b68072c9
+	github.com/brotherlogic/recordbudget v0.0.0-20221031210811-c07f37f3736c
+	github.com/brotherlogic/recordcollection v0.0.0-20221101233458-014e7b183c15
 	github.com/golang/protobuf v1.5.2
-	github.com/prometheus/client_golang v1.13.0
-	golang.org/x/net v0.0.0-20221014081412-f15817d10f9b
-	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a // indirect
+	github.com/prometheus/client_golang v1.14.0
+	golang.org/x/net v0.2.0
+	google.golang.org/genproto v0.0.0-20221114212237-e4508ebdbee1 // indirect
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 )
