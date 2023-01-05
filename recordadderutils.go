@@ -16,13 +16,6 @@ func (s *Server) processQueue(ctx context.Context) error {
 	}
 	queue := data.(*pb.Queue)
 
-	budget, err := s.budget.getBudget(ctx)
-	if err != nil {
-		return err
-	}
-
-	available := budget.GetBudget() + budget.GetSolds() - budget.GetSpends()
-
 	lowest := int32(999999)
 	for _, entry := range queue.GetRequests() {
 		if entry.GetCost() < lowest {
@@ -59,7 +52,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		}
 	}
 
-	err = s.runDigital(ctx, queue, available)
+	err = s.runDigital(ctx, queue)
 	if err != nil {
 		return err
 	}
@@ -76,7 +69,7 @@ func isDigital(req *pb.AddRecordRequest) bool {
 		req.GetFolder() == 2274270
 }
 
-func (s *Server) runDigital(ctx context.Context, queue *pb.Queue, available int32) error {
+func (s *Server) runDigital(ctx context.Context, queue *pb.Queue) error {
 	if len(queue.Requests) > 0 {
 		for i, req := range queue.GetRequests() {
 			if isDigital(req) {

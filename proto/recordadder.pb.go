@@ -35,6 +35,7 @@ type Queue struct {
 	LastAdditionDate    int64               `protobuf:"varint,3,opt,name=last_addition_date,json=lastAdditionDate,proto3" json:"last_addition_date,omitempty"`
 	LastDigitalAddition int64               `protobuf:"varint,4,opt,name=last_digital_addition,json=lastDigitalAddition,proto3" json:"last_digital_addition,omitempty"`
 	Added               []*AddedRecord      `protobuf:"bytes,5,rep,name=added,proto3" json:"added,omitempty"`
+	LastAdded           map[string]int64    `protobuf:"bytes,6,rep,name=last_added,json=lastAdded,proto3" json:"last_added,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
 }
 
 func (x *Queue) Reset() {
@@ -100,6 +101,13 @@ func (x *Queue) GetLastDigitalAddition() int64 {
 func (x *Queue) GetAdded() []*AddedRecord {
 	if x != nil {
 		return x.Added
+	}
+	return nil
+}
+
+func (x *Queue) GetLastAdded() map[string]int64 {
+	if x != nil {
+		return x.LastAdded
 	}
 	return nil
 }
@@ -802,7 +810,7 @@ var File_recordadder_proto protoreflect.FileDescriptor
 var file_recordadder_proto_rawDesc = []byte{
 	0x0a, 0x11, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x12, 0x0b, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65, 0x72,
-	0x22, 0x81, 0x02, 0x0a, 0x05, 0x51, 0x75, 0x65, 0x75, 0x65, 0x12, 0x39, 0x0a, 0x08, 0x72, 0x65,
+	0x22, 0x81, 0x03, 0x0a, 0x05, 0x51, 0x75, 0x65, 0x75, 0x65, 0x12, 0x39, 0x0a, 0x08, 0x72, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x72,
 	0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x41, 0x64, 0x64, 0x52, 0x65,
 	0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x08, 0x72, 0x65, 0x71,
@@ -818,7 +826,15 @@ var file_recordadder_proto_rawDesc = []byte{
 	0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2e, 0x0a, 0x05, 0x61, 0x64, 0x64, 0x65, 0x64, 0x18, 0x05, 0x20,
 	0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x61, 0x64, 0x64, 0x65,
 	0x72, 0x2e, 0x41, 0x64, 0x64, 0x65, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x05, 0x61,
-	0x64, 0x64, 0x65, 0x64, 0x22, 0x8f, 0x01, 0x0a, 0x0b, 0x4d, 0x6f, 0x76, 0x65, 0x72, 0x43, 0x6f,
+	0x64, 0x64, 0x65, 0x64, 0x12, 0x40, 0x0a, 0x0a, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x61, 0x64, 0x64,
+	0x65, 0x64, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x51, 0x75, 0x65, 0x75, 0x65, 0x2e, 0x4c, 0x61, 0x73,
+	0x74, 0x41, 0x64, 0x64, 0x65, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x09, 0x6c, 0x61, 0x73,
+	0x74, 0x41, 0x64, 0x64, 0x65, 0x64, 0x1a, 0x3c, 0x0a, 0x0e, 0x4c, 0x61, 0x73, 0x74, 0x41, 0x64,
+	0x64, 0x65, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x3a, 0x02, 0x38, 0x01, 0x22, 0x8f, 0x01, 0x0a, 0x0b, 0x4d, 0x6f, 0x76, 0x65, 0x72, 0x43, 0x6f,
 	0x6e, 0x66, 0x69, 0x67, 0x12, 0x43, 0x0a, 0x09, 0x61, 0x64, 0x64, 0x65, 0x64, 0x5f, 0x6d, 0x61,
 	0x70, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x26, 0x2e, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64,
 	0x61, 0x64, 0x64, 0x65, 0x72, 0x2e, 0x4d, 0x6f, 0x76, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69,
@@ -932,7 +948,7 @@ func file_recordadder_proto_rawDescGZIP() []byte {
 	return file_recordadder_proto_rawDescData
 }
 
-var file_recordadder_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_recordadder_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_recordadder_proto_goTypes = []interface{}{
 	(*Queue)(nil),                   // 0: recordadder.Queue
 	(*MoverConfig)(nil),             // 1: recordadder.MoverConfig
@@ -949,30 +965,32 @@ var file_recordadder_proto_goTypes = []interface{}{
 	(*ProcAddedResponse)(nil),       // 12: recordadder.ProcAddedResponse
 	(*ClientAddUpdateRequest)(nil),  // 13: recordadder.ClientAddUpdateRequest
 	(*ClientAddUpdateResponse)(nil), // 14: recordadder.ClientAddUpdateResponse
-	nil,                             // 15: recordadder.MoverConfig.AddedMapEntry
+	nil,                             // 15: recordadder.Queue.LastAddedEntry
+	nil,                             // 16: recordadder.MoverConfig.AddedMapEntry
 }
 var file_recordadder_proto_depIdxs = []int32{
 	3,  // 0: recordadder.Queue.requests:type_name -> recordadder.AddRecordRequest
 	2,  // 1: recordadder.Queue.added:type_name -> recordadder.AddedRecord
-	15, // 2: recordadder.MoverConfig.added_map:type_name -> recordadder.MoverConfig.AddedMapEntry
-	3,  // 3: recordadder.ListQueueResponse.requests:type_name -> recordadder.AddRecordRequest
-	3,  // 4: recordadder.AddRecordService.AddRecord:input_type -> recordadder.AddRecordRequest
-	5,  // 5: recordadder.AddRecordService.ListQueue:input_type -> recordadder.ListQueueRequest
-	7,  // 6: recordadder.AddRecordService.UpdateRecord:input_type -> recordadder.UpdateRecordRequest
-	9,  // 7: recordadder.AddRecordService.DeleteRecord:input_type -> recordadder.DeleteRecordRequest
-	11, // 8: recordadder.AddRecordService.ProcAdded:input_type -> recordadder.ProcAddedRequest
-	13, // 9: recordadder.ClientAddUpdateService.ClientAddUpdate:input_type -> recordadder.ClientAddUpdateRequest
-	4,  // 10: recordadder.AddRecordService.AddRecord:output_type -> recordadder.AddRecordResponse
-	6,  // 11: recordadder.AddRecordService.ListQueue:output_type -> recordadder.ListQueueResponse
-	8,  // 12: recordadder.AddRecordService.UpdateRecord:output_type -> recordadder.UpdateRecordResponse
-	10, // 13: recordadder.AddRecordService.DeleteRecord:output_type -> recordadder.DeleteRecordResponse
-	12, // 14: recordadder.AddRecordService.ProcAdded:output_type -> recordadder.ProcAddedResponse
-	14, // 15: recordadder.ClientAddUpdateService.ClientAddUpdate:output_type -> recordadder.ClientAddUpdateResponse
-	10, // [10:16] is the sub-list for method output_type
-	4,  // [4:10] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	15, // 2: recordadder.Queue.last_added:type_name -> recordadder.Queue.LastAddedEntry
+	16, // 3: recordadder.MoverConfig.added_map:type_name -> recordadder.MoverConfig.AddedMapEntry
+	3,  // 4: recordadder.ListQueueResponse.requests:type_name -> recordadder.AddRecordRequest
+	3,  // 5: recordadder.AddRecordService.AddRecord:input_type -> recordadder.AddRecordRequest
+	5,  // 6: recordadder.AddRecordService.ListQueue:input_type -> recordadder.ListQueueRequest
+	7,  // 7: recordadder.AddRecordService.UpdateRecord:input_type -> recordadder.UpdateRecordRequest
+	9,  // 8: recordadder.AddRecordService.DeleteRecord:input_type -> recordadder.DeleteRecordRequest
+	11, // 9: recordadder.AddRecordService.ProcAdded:input_type -> recordadder.ProcAddedRequest
+	13, // 10: recordadder.ClientAddUpdateService.ClientAddUpdate:input_type -> recordadder.ClientAddUpdateRequest
+	4,  // 11: recordadder.AddRecordService.AddRecord:output_type -> recordadder.AddRecordResponse
+	6,  // 12: recordadder.AddRecordService.ListQueue:output_type -> recordadder.ListQueueResponse
+	8,  // 13: recordadder.AddRecordService.UpdateRecord:output_type -> recordadder.UpdateRecordResponse
+	10, // 14: recordadder.AddRecordService.DeleteRecord:output_type -> recordadder.DeleteRecordResponse
+	12, // 15: recordadder.AddRecordService.ProcAdded:output_type -> recordadder.ProcAddedResponse
+	14, // 16: recordadder.ClientAddUpdateService.ClientAddUpdate:output_type -> recordadder.ClientAddUpdateResponse
+	11, // [11:17] is the sub-list for method output_type
+	5,  // [5:11] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_recordadder_proto_init() }
@@ -1168,7 +1186,7 @@ func file_recordadder_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_recordadder_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
