@@ -10,7 +10,7 @@ import (
 func TestFullRun(t *testing.T) {
 	s := InitTestServer()
 
-	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12})
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Folder: 12, Cost: 12, PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Errorf("Bad add: %v", err)
 	}
