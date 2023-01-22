@@ -27,7 +27,7 @@ func InitTestServer() *Server {
 func TestAddRequest(t *testing.T) {
 	s := InitTestServer()
 
-	val, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{})
+	val, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Fatalf("Add Record failed: %v", err)
 	}
@@ -40,11 +40,11 @@ func TestAddRequest(t *testing.T) {
 func TestAddDigitalRequest(t *testing.T) {
 	s := InitTestServer()
 
-	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Arrived: true})
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 12, Arrived: true, PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Fatalf("Add Record failed: %v", err)
 	}
-	_, err = s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 13, Folder: 242018, Arrived: true})
+	_, err = s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 13, Folder: 242018, Arrived: true, PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Fatalf("Add Record failed: %v", err)
 	}
@@ -110,12 +110,12 @@ func TestKeystoreFails(t *testing.T) {
 func TestDoubleAddRequest(t *testing.T) {
 	s := InitTestServer()
 
-	val, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	val, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123, PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Fatalf("Add Record failed: %v", err)
 	}
 
-	val, err = s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	val, err = s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123, PurchaseLocation: "discogs"})
 
 	if err == nil {
 		t.Fatalf("Double addition should have failed: %v", val)
@@ -125,7 +125,7 @@ func TestDoubleAddRequest(t *testing.T) {
 func TestListQueue(t *testing.T) {
 	s := InitTestServer()
 
-	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123, PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Fatalf("Add Record failed: %v", err)
 	}
@@ -144,7 +144,7 @@ func TestListQueue(t *testing.T) {
 func TestEmptyDelete(t *testing.T) {
 	s := InitTestServer()
 
-	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123})
+	_, err := s.AddRecord(context.Background(), &pb.AddRecordRequest{Id: 123, PurchaseLocation: "discogs"})
 	if err != nil {
 		t.Fatalf("Add Record failed: %v", err)
 	}
