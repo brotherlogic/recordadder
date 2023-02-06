@@ -7,7 +7,7 @@ import (
 	rbpb "github.com/brotherlogic/recordbudget/proto"
 	"golang.org/x/net/context"
 
-	pbgd "github.com/brotherlogic/godiscogs"
+	pbgd "github.com/brotherlogic/godiscogs/proto"
 	pb "github.com/brotherlogic/recordadder/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 )

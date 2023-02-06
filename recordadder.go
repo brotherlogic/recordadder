@@ -17,7 +17,7 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	dspb "github.com/brotherlogic/dstore/proto"
-	pbgd "github.com/brotherlogic/godiscogs"
+	pbgd "github.com/brotherlogic/godiscogs/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/recordadder/proto"
 	rbpb "github.com/brotherlogic/recordbudget/proto"

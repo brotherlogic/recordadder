@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
-	pbgd "github.com/brotherlogic/godiscogs"
+	pbgd "github.com/brotherlogic/godiscogs/proto"
 	qpb "github.com/brotherlogic/queue/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
