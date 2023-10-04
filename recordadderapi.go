@@ -23,7 +23,7 @@ const (
 	QUEUE = "/github.com/brotherlogic/recordadder/queue"
 )
 
-//AddRecord adds a record into the system
+// AddRecord adds a record into the system
 func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.AddRecordResponse, error) {
 	if req.GetPurchaseLocation() != "amoeba" &&
 		req.GetPurchaseLocation() != "stranded" &&
@@ -72,7 +72,7 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 	return &pb.AddRecordResponse{ExpectedAdditionDate: time.Now().Add(time.Hour * time.Duration((24 * len(queue.Requests)))).Unix()}, err
 }
 
-//ListQueue lists the entries in the queue
+// ListQueue lists the entries in the queue
 func (s *Server) ListQueue(ctx context.Context, req *pb.ListQueueRequest) (*pb.ListQueueResponse, error) {
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
@@ -83,7 +83,7 @@ func (s *Server) ListQueue(ctx context.Context, req *pb.ListQueueRequest) (*pb.L
 	return &pb.ListQueueResponse{Requests: queue.GetRequests()}, nil
 }
 
-//UpdateRecord updates a record
+// UpdateRecord updates a record
 func (s *Server) UpdateRecord(ctx context.Context, req *pb.UpdateRecordRequest) (*pb.UpdateRecordResponse, error) {
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
@@ -108,7 +108,7 @@ func (s *Server) UpdateRecord(ctx context.Context, req *pb.UpdateRecordRequest) 
 	return &pb.UpdateRecordResponse{}, s.KSclient.Save(ctx, QUEUE, queue)
 }
 
-//DeleteRecord remove a record from the queue
+// DeleteRecord remove a record from the queue
 func (s *Server) DeleteRecord(ctx context.Context, req *pb.DeleteRecordRequest) (*pb.DeleteRecordResponse, error) {
 	data, _, err := s.KSclient.Read(ctx, QUEUE, &pb.Queue{})
 	if err != nil {
@@ -128,7 +128,7 @@ func (s *Server) DeleteRecord(ctx context.Context, req *pb.DeleteRecordRequest) 
 
 }
 
-//ProcAdded processes the added queue
+// ProcAdded processes the added queue
 func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.ProcAddedResponse, error) {
 	conf, err3 := s.loadConfig(ctx)
 	if err3 != nil {
@@ -185,7 +185,11 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			if err != nil {
 				return nil, err
 			}
-			val = time.Now().Add(time.Hour * 24).Unix()
+			if req.GetType() == "FILE_CD" {
+				val = time.Now().Add(time.Hour * 6).Unix()
+			} else {
+				val = time.Now().Add(time.Hour * 24).Unix()
+			}
 		}
 
 		if len(recs) <= 1 {
