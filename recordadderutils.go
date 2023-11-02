@@ -40,7 +40,11 @@ func (s *Server) processQueue(ctx context.Context) error {
 
 				queue.LastAdditionDate = time.Now().Unix()
 				queue.Requests = append(queue.Requests[:i], queue.Requests[i+1:]...)
-				queue.Added = append(queue.Added, &pb.AddedRecord{InstanceId: iid, DateAdded: time.Now().Unix()})
+				queue.Added = append(queue.Added, &pb.AddedRecord{
+					InstanceId: iid,
+					DateAdded:  time.Now().Unix(),
+					FolderId:   req.GetFolder()})
+				updateMetrics(queue)
 
 				// We need to refresh the context for the save since the fanout may have run out the clock
 				ctxinner, cancelinner := utils.ManualContext("rasave", time.Minute)

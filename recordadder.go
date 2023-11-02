@@ -25,6 +25,23 @@ import (
 	google_protobuf "github.com/golang/protobuf/ptypes/any"
 )
 
+var (
+	adds = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordadder_adds_24hours",
+		Help: "The number of records we know of that have arrived but we haven't moved yet",
+	})
+)
+
+func updateMetrics(queue *pb.Queue) {
+	recentAdds := float64(0)
+	for _, entry := range queue.GetAdded() {
+		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 && entry.GetFolderId() == 242017 {
+			recentAdds++
+		}
+	}
+	adds.Set((recentAdds))
+}
+
 type budget interface {
 	getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, error)
 }
@@ -101,7 +118,7 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 
 }
 
-//Server main server type
+// Server main server type
 type Server struct {
 	*goserver.GoServer
 	rc          collection
