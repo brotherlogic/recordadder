@@ -187,11 +187,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			if err != nil {
 				return nil, err
 			}
-			if req.GetType() == "FILE_CD" {
-				val = time.Now().Add(time.Hour * 6).Unix()
-			} else {
-				val = time.Now().Add(time.Hour * 24).Unix()
-			}
+			val = time.Now().Add(time.Hour).Unix()
 		}
 
 		if len(recs) <= 1 {
