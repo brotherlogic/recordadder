@@ -137,7 +137,9 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 
 	val, ok := conf.GetAddedMap()[req.GetType()]
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
-	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 || (time.Since(time.Unix(val, 0)) > time.Hour*6 && req.GetType() == "FILE_CD") {
+	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 ||
+		(time.Since(time.Unix(val, 0)) > time.Hour*6 && req.GetType() == "FILE_CD") ||
+		(time.Since(time.Unix(val, 0)) > time.Hour*6 && req.GetType() == "FILE_12") {
 		//s.CtxLog(ctx,"Adding!")
 
 		conn, err := s.FDialServer(ctx, "recordcollection")
