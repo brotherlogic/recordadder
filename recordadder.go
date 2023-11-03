@@ -26,20 +26,25 @@ import (
 )
 
 var (
-	adds = promauto.NewGauge(prometheus.GaugeOpts{
+	adds = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "recordadder_adds_24hours",
 		Help: "The number of records we know of that have arrived but we haven't moved yet",
-	})
+	}, []string{"dest"})
 )
 
 func updateMetrics(queue *pb.Queue) {
 	recentAdds := float64(0)
+	recentAddsSeven := float64(0)
 	for _, entry := range queue.GetAdded() {
 		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 && entry.GetFolderId() == 242017 {
 			recentAdds++
 		}
+		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 && entry.GetFolderId() == 267116 {
+			recentAdds++
+		}
 	}
-	adds.Set((recentAdds))
+	adds.With(prometheus.Labels{"dest": "12"}).Set((recentAdds))
+	adds.With(prometheus.Labels{"dest": "7"}).Set((recentAddsSeven))
 }
 
 type budget interface {
