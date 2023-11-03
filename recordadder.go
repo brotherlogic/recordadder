@@ -40,7 +40,7 @@ func updateMetrics(queue *pb.Queue) {
 			recentAdds++
 		}
 		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 && entry.GetFolderId() == 267116 {
-			recentAdds++
+			recentAddsSeven++
 		}
 	}
 	adds.With(prometheus.Labels{"dest": "12"}).Set((recentAdds))
