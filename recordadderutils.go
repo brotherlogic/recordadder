@@ -44,7 +44,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 					InstanceId: iid,
 					DateAdded:  time.Now().Unix(),
 					FolderId:   req.GetFolder()})
-				updateMetrics(queue)
+				s.updateMetrics(ctx, queue)
 
 				// We need to refresh the context for the save since the fanout may have run out the clock
 				ctxinner, cancelinner := utils.ManualContext("rasave", time.Minute)
