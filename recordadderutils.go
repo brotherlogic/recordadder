@@ -15,6 +15,7 @@ func (s *Server) processQueue(ctx context.Context) error {
 		return fmt.Errorf("Error reading queue: %v", err)
 	}
 	queue := data.(*pb.Queue)
+	s.updateMetrics(ctx, queue)
 
 	lowest := int32(999999)
 	for _, entry := range queue.GetRequests() {
