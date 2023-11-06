@@ -35,16 +35,12 @@ var (
 func (s *Server) updateMetrics(ctx context.Context, queue *pb.Queue) {
 	recentAdds := float64(0)
 	recentAddsSeven := float64(0)
-	for key, entry := range queue.GetAdded() {
-		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 && entry.GetFolderId() == 242017 {
+	for _, entry := range queue.GetAdded() {
+		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*18 && entry.GetFolderId() == 242017 {
 			recentAdds++
 		}
-		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 && entry.GetFolderId() == 267116 {
+		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*18 && entry.GetFolderId() == 267116 {
 			recentAddsSeven++
-		}
-
-		if time.Since(time.Unix(entry.GetDateAdded(), 0)) < time.Hour*24 {
-			s.CtxLog(ctx, fmt.Sprintf("%v -> %v", key, entry))
 		}
 	}
 	adds.With(prometheus.Labels{"dest": "12"}).Set((recentAdds))
