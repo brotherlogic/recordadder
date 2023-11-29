@@ -30,6 +30,10 @@ var (
 		Name: "recordadder_adds_24hours",
 		Help: "The number of records we know of that have arrived but we haven't moved yet",
 	}, []string{"dest"})
+	dones = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "recordadder_dones",
+		Help: "The number of records we know of that have arrived but we haven't moved yet",
+	}, []string{"dest"})
 )
 
 func (s *Server) updateMetrics(ctx context.Context, queue *pb.Queue) {
