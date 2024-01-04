@@ -15,7 +15,6 @@ import (
 	_ "google.golang.org/grpc/encoding/gzip"
 )
 
-
 func main() {
 	ctx, cancel := utils.ManualContext("recordader-cli", time.Second*10)
 	defer cancel()
@@ -37,10 +36,11 @@ func main() {
 		var resetFoldr = addFlags.Int("resetfolder", 0, "Reset folder for the record")
 		var year = addFlags.Int("year", time.Now().Year(), "Year for accounting purposes")
 		var location = addFlags.String("location", "", "Purchase Location")
+		var parents = addFlags.Bool("parents", false, "")
 
 		if err := addFlags.Parse(os.Args[2:]); err == nil {
 			if *id > 0 && *cost > 0 && *folder > 0 {
-				res, err := client.AddRecord(ctx, &pb.AddRecordRequest{PurchaseLocation: *location, Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr), AccountingYear: int32(*year)})
+				res, err := client.AddRecord(ctx, &pb.AddRecordRequest{WasParents: *parents, PurchaseLocation: *location, Cost: int32(*cost), Id: int32(*id), Folder: int32(*folder), ResetFolder: int32(*resetFoldr), AccountingYear: int32(*year)})
 				if err != nil {
 					log.Fatalf("Error on Add Record: %v", err)
 				}

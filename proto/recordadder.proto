@@ -22,6 +22,7 @@ message AddedRecord {
   int64 date_added = 2;
   int64 date_arrived = 3;
   int32 folder_id = 4;
+  bool was_parents = 5;
 }
 
 message AddRecordRequest {
@@ -33,6 +34,7 @@ message AddRecordRequest {
   bool arrived = 6;
   int64 date_added = 7;
   string purchase_location = 8;
+  bool was_parents = 9;
 }
 
 message AddRecordResponse {
