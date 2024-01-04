@@ -118,7 +118,7 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 	}
 	resp, err := client.AddRecord(ctx, &pbrc.AddRecordRequest{ToAdd: &pbrc.Record{
 		Release:  &pbgd.Release{Id: r.Id},
-		Metadata: &pbrc.ReleaseMetadata{Cost: r.Cost, GoalFolder: r.Folder, AccountingYear: r.AccountingYear, PurchaseLocation: pl},
+		Metadata: &pbrc.ReleaseMetadata{WasParents: r.WasParents, Cost: r.Cost, GoalFolder: r.Folder, AccountingYear: r.AccountingYear, PurchaseLocation: pl},
 	}})
 	if err != nil {
 		return -1, err
