@@ -263,7 +263,7 @@ func (s *Server) runTimedTask() error {
 
 		cancel()
 
-		time.Sleep(time.Hour)
+		time.Sleep(time.Minute * 15)
 	}
 
 	return nil

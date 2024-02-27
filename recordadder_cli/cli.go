@@ -45,7 +45,11 @@ func main() {
 					log.Fatalf("Error on Add Record: %v", err)
 				}
 				fmt.Printf("Expected to be added on %v\n", time.Unix(res.ExpectedAdditionDate, 0))
+			} else {
+			log.Printf("Missing data: %v, %v, %v", *id, *cost, *folder)
 			}
+		} else {
+		log.Printf("Error in add: %v", err)
 		}
 	case "list":
 		res, err := client.ListQueue(ctx, &pb.ListQueueRequest{})
