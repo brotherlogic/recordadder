@@ -1,7 +1,7 @@
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
-github.com/brotherlogic/buildserver v0.0.0-20240628202032-b4990c541c9c h1:n8bK7Oz6juojqA6XlMpMUyW/cKIfPhMFEVAzEVOpcEA=
-github.com/brotherlogic/buildserver v0.0.0-20240628202032-b4990c541c9c/go.mod h1:0nbLAqklHcEBKXk294QXe0frApjFReTzT7mCczjHJ3I=
+github.com/brotherlogic/buildserver v0.0.0-20240628204613-564342c3ac2c h1:7uZtWILKmNhJLYYmwTv+Fc8R2bK1d1PFhGuHOqjtYc4=
+github.com/brotherlogic/buildserver v0.0.0-20240628204613-564342c3ac2c/go.mod h1:yZc3Q9RU47wv/G3AyCvBJtP1HyBU2hlWZ75HA8ucKn4=
 github.com/brotherlogic/datastore v0.0.0-20240628021910-0ede9e3643aa h1:n0zPfCUPtdnwROIq+4H9zMsbiuNTNygN6Uw1oOC9t6Y=
 github.com/brotherlogic/datastore v0.0.0-20240628021910-0ede9e3643aa/go.mod h1:veAWVNQiPa3xoDaJf7S0KAddISVep+BIl+O4Nku1DZc=
 github.com/brotherlogic/discovery v0.0.0-20240628200643-dcf050d5855d h1:oilKEt/DLm1yxTAgTJY1s24VlAJ4GHevGzxv87DR0mw=
@@ -30,8 +30,8 @@ github.com/brotherlogic/queue v0.0.0-20240628201829-73182fb61d63 h1:kvPX2lGxBOg+
 github.com/brotherlogic/queue v0.0.0-20240628201829-73182fb61d63/go.mod h1:5+vAEBmPrJqBKHsDPiEScA3eRj7fKZuZlBVuQvMIfzQ=
 github.com/brotherlogic/recordbudget v0.0.0-20240622201523-b0c60aa32cc4 h1:foADvHiwrUtjx3L5NI7R9nIdL1wrc++ES8maRuU4qtY=
 github.com/brotherlogic/recordbudget v0.0.0-20240622201523-b0c60aa32cc4/go.mod h1:nGCgw/brdxL2KWgQJ5LuSjzhpsL6fpOnnVkfzGeaAe4=
-github.com/brotherlogic/recordcollection v0.0.0-20240628201443-332efe9188b7 h1:Eyam31d8hw6OAlkHvk1KdIEB9l7odSzsVFm3hzuH7ck=
-github.com/brotherlogic/recordcollection v0.0.0-20240628201443-332efe9188b7/go.mod h1:ZbA3dmLOyGvVqNZ9aEaTV+b5pUMenqOAx+UQDaWKwaI=
+github.com/brotherlogic/recordcollection v0.0.0-20240628204545-076fcfbf2e6a h1:Ga8TT/+hxdTGBD5EbTmvB7o1joQRcxtcquXBmywAgYk=
+github.com/brotherlogic/recordcollection v0.0.0-20240628204545-076fcfbf2e6a/go.mod h1:LkdnAi7bSM+RTZcChdvdd7ny9CgEf5z9C5J9wkEGSts=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 h1:YjFE4Sa+wwbl4yJwJaMQVeA4CMzLIDbbIuSMdsEp5/w=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2/go.mod h1:ODrbMDhG+yOp2vie9vE4oaKsKhILDralZMr7PJ4HrJY=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
