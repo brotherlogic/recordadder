@@ -156,6 +156,10 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return nil, err
 		}
 		conf.TodayFolders[242017] = issue.GetNumber()
+		err = s.saveConfig(ctx, conf)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if conf.GetTodayFolders()[2627117] == 0 {
@@ -164,6 +168,10 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return nil, err
 		}
 		conf.TodayFolders[242017] = issue.GetNumber()
+		err = s.saveConfig(ctx, conf)
+		if err != nil {
+			return nil, err
+		}
 	}
 	val, ok := conf.GetAddedMap()[req.GetType()]
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
