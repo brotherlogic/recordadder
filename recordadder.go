@@ -305,6 +305,10 @@ func (s *Server) loadConfig(ctx context.Context) (*pb.MoverConfig, error) {
 		return nil, err
 	}
 
+	if config.TodayFolders == nil {
+		config.TodayFolders = make(map[int32]int32)
+	}
+
 	for t, d := range config.GetAddedMap() {
 		added.With(prometheus.Labels{"type": t}).Set(float64(d))
 	}
