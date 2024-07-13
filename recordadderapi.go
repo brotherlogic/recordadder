@@ -57,6 +57,15 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 
 	queue.Requests = append(queue.Requests, req)
 
+	conf, err := s.loadConfig(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if conf.GetTodayFolders()[req.GetFolder()] > 0 {
+		s.DeleteIssue(ctx, conf.GetTodayFolders()[req.GetFolder()])
+	}
+
 	// Run the fanout
 	for _, server := range s.fanout {
 		// Use a new context for fanout
@@ -136,6 +145,26 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		return nil, err3
 	}
 
+	if time.Now().YearDay() != int(conf.GetCurrentDay()) {
+		conf.TodayFolders = make(map[int32]int32)
+	}
+
+	// Add a seven inch
+	if conf.GetTodayFolders()[242017] == 0 {
+		issue, err := s.ImmediateIssue(ctx, "Add a 12 inch", "Do this", true, true)
+		if err != nil {
+			return nil, err
+		}
+		conf.TodayFolders[242017] = issue.GetNumber()
+	}
+
+	if conf.GetTodayFolders()[2627117] == 0 {
+		issue, err := s.ImmediateIssue(ctx, "Add a 7 inch", "Do this", true, true)
+		if err != nil {
+			return nil, err
+		}
+		conf.TodayFolders[242017] = issue.GetNumber()
+	}
 	val, ok := conf.GetAddedMap()[req.GetType()]
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 ||
