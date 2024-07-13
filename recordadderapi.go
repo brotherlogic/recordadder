@@ -167,7 +167,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		if err != nil {
 			return nil, err
 		}
-		conf.TodayFolders[242017] = issue.GetNumber()
+		conf.TodayFolders[2627117] = issue.GetNumber()
 		err = s.saveConfig(ctx, conf)
 		if err != nil {
 			return nil, err
