@@ -274,6 +274,10 @@ const (
 )
 
 func (s *Server) loadConfig(ctx context.Context) (*pb.MoverConfig, error) {
+	if s.testing {
+		return &pb.MoverConfig{}, nil
+	}
+
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
 		return nil, err
