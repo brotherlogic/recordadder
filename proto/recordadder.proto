@@ -11,10 +11,12 @@ message Queue {
   int64 last_digital_addition = 4;
   repeated AddedRecord added = 5;
   map<string, int64> last_added = 6;
-} 
+}
 
 message MoverConfig {
   map<string, int64> added_map = 1;
+  map<int32, int32> today_folders = 2;
+  int32 current_day = 3;
 }
 
 message AddedRecord {
