@@ -62,6 +62,8 @@ func (s *Server) AddRecord(ctx context.Context, req *pb.AddRecordRequest) (*pb.A
 		return nil, err
 	}
 
+	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
+
 	if conf.GetTodayFolders()[req.GetFolder()] > 0 {
 		s.DeleteIssue(ctx, conf.GetTodayFolders()[req.GetFolder()])
 	}
@@ -149,6 +151,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		conf.TodayFolders = make(map[int32]int32)
 	}
 
+	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
 	// Add a seven inch
 	if conf.GetTodayFolders()[242017] == 0 {
 		issue, err := s.ImmediateIssue(ctx, "Add a 12 inch", "Do this", true, true)
