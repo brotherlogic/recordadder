@@ -170,12 +170,12 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 		}
 	}
 
-	if conf.GetTodayFolders()[2627117] == 0 {
+	if conf.GetTodayFolders()[267116] == 0 {
 		issue, err := s.ImmediateIssue(ctx, "Add a 7 inch", "Do this", true, true)
 		if err != nil {
 			return nil, err
 		}
-		conf.TodayFolders[2627117] = issue.GetNumber()
+		conf.TodayFolders[267116] = issue.GetNumber()
 		err = s.saveConfig(ctx, conf)
 		if err != nil {
 			return nil, err
