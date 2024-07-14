@@ -176,6 +176,8 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return nil, err
 		}
 	}
+	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
+
 	val, ok := conf.GetAddedMap()[req.GetType()]
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 ||
