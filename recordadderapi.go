@@ -150,6 +150,10 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	if time.Now().YearDay() != int(conf.GetCurrentDay()) {
 		conf.TodayFolders = make(map[int32]int32)
 		conf.CurrentDay = int32(time.Now().YearDay())
+		err := s.saveConfig(ctx, conf)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
