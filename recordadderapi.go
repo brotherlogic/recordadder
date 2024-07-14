@@ -149,6 +149,11 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 
 	if time.Now().YearDay() != int(conf.GetCurrentDay()) {
 		conf.TodayFolders = make(map[int32]int32)
+		conf.CurrentDay = int32(time.Now().YearDay())
+		err := s.saveConfig(ctx, conf)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
@@ -176,6 +181,8 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			return nil, err
 		}
 	}
+	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
+
 	val, ok := conf.GetAddedMap()[req.GetType()]
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 ||
