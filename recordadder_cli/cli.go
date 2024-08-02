@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	ctx, cancel := utils.ManualContext("recordader-cli", time.Second*10)
+	ctx, cancel := utils.ManualContext("recordader-cli", time.Second*60)
 	defer cancel()
 
 	conn, err := utils.LFDialServer(ctx, "recordadder")
