@@ -157,18 +157,6 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	}
 
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
-	// Add a seven inch
-	if conf.GetTodayFolders()[242017] == 0 {
-		issue, err := s.ImmediateIssue(ctx, "Add a 12 inch", "Do this", true, true)
-		if err != nil {
-			return nil, err
-		}
-		conf.TodayFolders[242017] = issue.GetNumber()
-		err = s.saveConfig(ctx, conf)
-		if err != nil {
-			return nil, err
-		}
-	}
 
 	if conf.GetTodayFolders()[267116] == 0 {
 		issue, err := s.ImmediateIssue(ctx, "Add 3 7 inches", "Do this", true, true)
