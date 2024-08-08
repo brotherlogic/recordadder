@@ -123,6 +123,15 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 	if err != nil {
 		return -1, err
 	}
+
+	// Also dial grambridge and ping it
+	conn2, err := p.dial(ctx, "grambridge")
+	if err != nil {
+		return -1, err
+	}
+	gbc := pbrc.NewClientUpdateServiceClient(conn2)
+	gbc.ClientUpdate(ctx, &pbrc.ClientUpdateRequest{InstanceId: resp.GetAdded().GetRelease().GetInstanceId()})
+
 	return resp.GetAdded().GetRelease().GetInstanceId(), nil
 
 }
