@@ -136,6 +136,34 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 
 }
 
+func (s *Server) getUnlistenedSevens(ctx context.Context) (int, error) {
+	conn, err := s.FDialServer(ctx, "recordcollection")
+	defer conn.Close()
+	if err != nil {
+		return 0, err
+	}
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	recs, err := client.QueryRecords(ctx, &pbrc.QueryRecordsRequest{
+		Query: &pbrc.QueryRecordsRequest_Category{Category: pbrc.ReleaseMetadata_UNLISTENED},
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	count := 0
+	for _, r := range recs.GetInstanceIds() {
+		rec, err := client.GetRecord(ctx, &pbrc.GetRecordRequest{InstanceId: r})
+		if err != nil {
+			return 0, err
+		}
+		if rec.GetRecord().GetMetadata().GetFiledUnder() == pbrc.ReleaseMetadata_FILE_7_INCH {
+			count++
+		}
+	}
+
+	return count, nil
+}
+
 // Server main server type
 type Server struct {
 	*goserver.GoServer

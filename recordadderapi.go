@@ -159,14 +159,21 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
 
 	if conf.GetTodayFolders()[267116] == 0 {
-		issue, err := s.ImmediateIssue(ctx, "Add 3 7 inches", "Do this", true, true)
+
+		ulcount, err := s.getUnlistenedSevens(ctx)
 		if err != nil {
 			return nil, err
 		}
-		conf.TodayFolders[267116] = issue.GetNumber()
-		err = s.saveConfig(ctx, conf)
-		if err != nil {
-			return nil, err
+		if ulcount < 3 {
+			issue, err := s.ImmediateIssue(ctx, "Add 3 7 inches", "Do this", true, true)
+			if err != nil {
+				return nil, err
+			}
+			conf.TodayFolders[267116] = issue.GetNumber()
+			err = s.saveConfig(ctx, conf)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
