@@ -3,11 +3,11 @@ module github.com/brotherlogic/recordadder
 go 1.23.2
 
 require (
-	github.com/brotherlogic/dstore v0.0.0-20241231131947-213875e28809
+	github.com/brotherlogic/dstore v0.0.0-20241231142012-8319ca4130b5
 	github.com/brotherlogic/godiscogs v0.0.0-20240823195726-9a8d322e6898
 	github.com/brotherlogic/goserver v0.0.0-20240826215223-fccbac46b3d4
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
-	github.com/brotherlogic/queue v0.0.0-20241231115302-b9eff4ade12b
+	github.com/brotherlogic/queue v0.0.0-20241231140122-c7eebee6705a
 	github.com/brotherlogic/recordbudget v0.0.0-20241231135534-f340780e7a6a
 	github.com/brotherlogic/recordcollection v0.0.0-20241231125536-eb4b200d8906
 	github.com/golang/protobuf v1.5.4
@@ -19,7 +19,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20241231120144-0b4703214990 // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20241231140113-9113c3d8eac5 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20241220230045-434035a99d2b // indirect
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20241231115145-6cc2498ec3fe // indirect
