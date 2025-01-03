@@ -177,6 +177,27 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			}
 		}
 	}
+
+	if conf.GetTodayFolders()[242018] == 0 {
+
+		ulcount, err := s.getUnlistenedCDs(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if ulcount < 2 {
+			s.CtxLog(ctx, fmt.Sprintf("Adding more because current count is %v", ulcount))
+			issue, err := s.ImmediateIssue(ctx, "Add a CD", "Do this", true, true)
+			if err != nil {
+				return nil, err
+			}
+			conf.TodayFolders[242018] = issue.GetNumber()
+			err = s.saveConfig(ctx, conf)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
 
 	val, ok := conf.GetAddedMap()[req.GetType()]
