@@ -138,10 +138,11 @@ func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 
 func (s *Server) getUnlistenedSevens(ctx context.Context) (int, error) {
 	conn, err := s.FDialServer(ctx, "recordcollection")
-	defer conn.Close()
 	if err != nil {
 		return 0, err
 	}
+	defer conn.Close()
+
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	recs, err := client.QueryRecords(ctx, &pbrc.QueryRecordsRequest{
 		Query: &pbrc.QueryRecordsRequest_Category{Category: pbrc.ReleaseMetadata_UNLISTENED},
