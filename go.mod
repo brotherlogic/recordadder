@@ -3,12 +3,12 @@ module github.com/brotherlogic/recordadder
 go 1.23.2
 
 require (
-	github.com/brotherlogic/dstore v0.0.0-20250313151611-439a00908af2
+	github.com/brotherlogic/dstore v0.0.0-20250313161629-7c8c9eb1666b
 	github.com/brotherlogic/godiscogs v0.0.0-20250131163651-1e34c776a68e
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
-	github.com/brotherlogic/queue v0.0.0-20250313150407-574457b35768
-	github.com/brotherlogic/recordbudget v0.0.0-20250313150043-249649137784
+	github.com/brotherlogic/queue v0.0.0-20250313170348-34a7ab3c5e6f
+	github.com/brotherlogic/recordbudget v0.0.0-20250313170459-31aa80463760
 	github.com/brotherlogic/recordcollection v0.0.0-20250227174213-ce20ec909d87
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.21.1
@@ -22,11 +22,11 @@ require (
 	github.com/brotherlogic/buildserver v0.0.0-20250312104212-00c75d4bd632 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250313015544-917b63bdd6ff // indirect
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
-	github.com/brotherlogic/githubcard v0.0.0-20250313140339-d3c2de2aaeb7 // indirect
+	github.com/brotherlogic/githubcard v0.0.0-20250313190526-6babd50c287d // indirect
 	github.com/brotherlogic/githubridge v0.2849.0 // indirect
-	github.com/brotherlogic/gobuildslave v0.0.0-20250313154206-19d901281032 // indirect
-	github.com/brotherlogic/lock v0.0.0-20250313150526-a93bf105f39e // indirect
-	github.com/brotherlogic/logging v0.0.0-20250313151718-8fe2785fa0f5 // indirect
+	github.com/brotherlogic/gobuildslave v0.0.0-20250313171943-fa2273e53790 // indirect
+	github.com/brotherlogic/lock v0.0.0-20250313180704-4e93f864aa0a // indirect
+	github.com/brotherlogic/logging v0.0.0-20250313184253-12d7af904a34 // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -34,10 +34,10 @@ require (
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.62.0 // indirect
+	github.com/prometheus/common v0.63.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/struCoder/pidusage v0.2.1 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250311190419-81fb87f6b8bf // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250313182123-33a14cd5fa76 // indirect
 )
