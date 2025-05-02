@@ -3,7 +3,7 @@ module github.com/brotherlogic/recordadder
 go 1.23.2
 
 require (
-	github.com/brotherlogic/dstore v0.0.0-20250425223645-3c2331ca9efb
+	github.com/brotherlogic/dstore v0.0.0-20250502225938-3ca193ff3d01
 	github.com/brotherlogic/godiscogs v0.0.0-20250429182651-404c7473edf8
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
