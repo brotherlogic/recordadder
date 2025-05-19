@@ -35,6 +35,9 @@ func (p *testCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) 
 	p.addedRecord = &pbrc.Record{Release: &pbgd.Release{Id: r.Id}}
 	return 123, nil
 }
+func (p *testCollection) getRecord(ctx context.Context, id int32) (*pbrc.Record, error) {
+	return &pbrc.Record{}, nil
+}
 
 func TestBasicRunThrough(t *testing.T) {
 	s := InitTestServer()
