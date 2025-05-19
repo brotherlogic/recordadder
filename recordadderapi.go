@@ -285,3 +285,22 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 
 	return nil, status.Errorf(codes.FailedPrecondition, "there is nothing to add here (%v) until %v", req.GetType(), time.Since(time.Unix(val, 0)))
 }
+
+func (s *Server) ClientUpdate(ctx context.Context, req *pbrc.ClientUpdateRequest) (*pbrc.ClientUpdateResponse, error) {
+	rec, err := s.rc.getRecord(ctx, req.GetInstanceId())
+	if err != nil {
+		return nil, err
+	}
+	conf, err := s.loadConfig(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if time.Since(time.Unix(rec.GetMetadata().GetDateAdded(), 0)) < time.Hour*24 {
+		if conf.GetTodayFolders()[rec.GetMetadata().GetGoalFolder()] > 0 {
+			s.DeleteIssue(ctx, conf.GetTodayFolders()[rec.GetMetadata().GetGoalFolder()])
+		}
+	}
+
+	return &pbrc.ClientUpdateResponse{}, nil
+}

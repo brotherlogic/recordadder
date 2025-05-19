@@ -72,10 +72,26 @@ func (p *prodBudget) getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, er
 
 type collection interface {
 	addRecord(ctx context.Context, r *pb.AddRecordRequest) (int32, error)
+	getRecord(ctx context.Context, id int32) (*pbrc.Record, error)
 }
 
 type prodCollection struct {
 	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
+}
+
+func (p *prodCollection) getRecord(ctx context.Context, id int32) (*pbrc.Record, error) {
+	conn, err := p.dial(ctx, "recordcollection")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	resp, err := client.GetRecord(ctx, &pbrc.GetRecordRequest{InstanceId: id})
+	if err != nil {
+		return nil, err
+	}
+	return resp.GetRecord(), nil
 }
 
 func (p *prodCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) (int32, error) {
