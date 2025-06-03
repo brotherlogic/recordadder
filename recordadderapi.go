@@ -302,5 +302,5 @@ func (s *Server) ClientUpdate(ctx context.Context, req *pbrc.ClientUpdateRequest
 		}
 	}
 
-	return &pbrc.ClientUpdateResponse{}, nil
+	return &pbrc.ClientUpdateResponse{}, s.saveConfig(ctx, conf)
 }
