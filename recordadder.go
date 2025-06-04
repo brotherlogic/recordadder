@@ -256,6 +256,7 @@ func (s *Server) runFanout(ctx context.Context, server string, id int32) error {
 // DoRegister does RPC registration
 func (s *Server) DoRegister(server *grpc.Server) {
 	pb.RegisterAddRecordServiceServer(server, s)
+	pbrc.RegisterClientUpdateServiceServer(server, s)
 }
 
 // ReportHealth alerts if we're not healthy
