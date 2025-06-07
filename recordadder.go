@@ -292,6 +292,10 @@ var (
 		Name: "recordadder_last_add",
 		Help: "The last addition for each type",
 	}, []string{"type"})
+	issues = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "recordadder_issues",
+		Help: "The last addition for each type",
+	}, []string{"type"})
 )
 
 func (s *Server) load(ctx context.Context) (*pb.Queue, error) {
@@ -394,6 +398,10 @@ func (s *Server) loadConfig(ctx context.Context) (*pb.MoverConfig, error) {
 
 	for t, d := range config.GetAddedMap() {
 		added.With(prometheus.Labels{"type": t}).Set(float64(d))
+	}
+
+	for t, d := range config.GetTodayFolders() {
+		issues.With(prometheus.Labels{"type": fmt.Sprintf("%v", t)}).Set(float64(d))
 	}
 
 	return config, nil
