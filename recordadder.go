@@ -408,6 +408,11 @@ func (s *Server) loadConfig(ctx context.Context) (*pb.MoverConfig, error) {
 }
 
 func (s *Server) saveConfig(ctx context.Context, config *pb.MoverConfig) error {
+
+	for t, d := range config.GetTodayFolders() {
+		issues.With(prometheus.Labels{"type": fmt.Sprintf("%v", t)}).Set(float64(d))
+	}
+
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
 		return err
