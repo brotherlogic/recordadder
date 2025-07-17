@@ -26,10 +26,10 @@ github.com/brotherlogic/logging v0.0.0-20250714215612-d76512b702de h1:gjbjCr/fEF
 github.com/brotherlogic/logging v0.0.0-20250714215612-d76512b702de/go.mod h1:LqGprjgoFch8ZPtQH6/MgtAjkMbiBQi78jqsvYndhaw=
 github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 h1:hxu2T9JspE76sL3XAx/CNtA9bOO6QCEJkyG9rBXFEVA=
 github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6/go.mod h1:babny4VO2GqFwjXqhJsP4a6la4XJeMT6f4BgLBPq4G8=
-github.com/brotherlogic/queue v0.0.0-20250717034033-67e5dcc33abf h1:1b18B9r8ASZeFQyMjw5eUNU82o3hxoEOvJn+xSBRRco=
-github.com/brotherlogic/queue v0.0.0-20250717034033-67e5dcc33abf/go.mod h1:4sx87itga5dPJqv9oZfwxbl2CqEqEV7QC8Js9mcZhZc=
-github.com/brotherlogic/recordbudget v0.0.0-20250717034754-2d055a8bc1c6 h1:5RLgj+ZxiYYpFZBMd68GYllOupgzEiaM/mouJRrXSJ4=
-github.com/brotherlogic/recordbudget v0.0.0-20250717034754-2d055a8bc1c6/go.mod h1:VAdgOFo/7AWzrPn2LIQx3lQ3QrHtaEb1JjJcCOc+hFI=
+github.com/brotherlogic/queue v0.0.0-20250717044334-739915cc4d8e h1:Vce9GwlCHoA99KC4QaRF2pkU3OhBexlrRtlAwyG6sLk=
+github.com/brotherlogic/queue v0.0.0-20250717044334-739915cc4d8e/go.mod h1:8FsbQZhgdZnW76JMVhWVAPVfYlBl3+wybuLQAWGHDmQ=
+github.com/brotherlogic/recordbudget v0.0.0-20250717044149-93d7208fcd7a h1:+MakLHHVwMYTEsvPm8FzM/DfSAadzTUnqSPxTapwKzk=
+github.com/brotherlogic/recordbudget v0.0.0-20250717044149-93d7208fcd7a/go.mod h1:vKRoVLR1ZCgmX9TWT9krY74ehg6/Yi2e5b/O/XuX9QY=
 github.com/brotherlogic/recordcollection v0.0.0-20250715205636-bf74e659d908 h1:fEGnnofUS9gMC+xsOp8C0dEfe/4NoDhYwK/MLb5VvuQ=
 github.com/brotherlogic/recordcollection v0.0.0-20250715205636-bf74e659d908/go.mod h1:NnhvH//ryqGgwgMfI9OXqouzrsSQ9VeYoyUuqxhYH+E=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 h1:YjFE4Sa+wwbl4yJwJaMQVeA4CMzLIDbbIuSMdsEp5/w=
