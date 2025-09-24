@@ -235,11 +235,11 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			if err != nil {
 				return nil, err
 			}
-			val = time.Now().Add(time.Hour).Unix()
+			val = time.Now().Add(time.Minute).Unix()
 		}
 
 		if len(recs) <= 1 {
-			val = time.Now().Add(time.Hour).Unix()
+			val = time.Now().Add(time.Minute).Unix()
 		}
 
 		runTime := val
