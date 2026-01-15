@@ -184,6 +184,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_7_INCH") ||
+		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_TAPE") ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_CD") ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_DIGITAL") ||
 		(time.Since(time.Unix(val, 0)) > time.Hour*6 && req.GetType() == "FILE_12_INCH") {
