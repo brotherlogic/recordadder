@@ -158,26 +158,6 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 
 	s.CtxLog(ctx, fmt.Sprintf("Found %v", conf.GetTodayFolders()))
 
-	if conf.GetTodayFolders()[267116] == 0 {
-
-		ulcount, err := s.getUnlistenedSevens(ctx)
-		if err != nil {
-			return nil, err
-		}
-		if ulcount < 3 {
-			s.CtxLog(ctx, fmt.Sprintf("Adding more because current count is %v", ulcount))
-			issue, err := s.ImmediateIssue(ctx, "Add 3 7 inches", "Do this", true, true)
-			if err != nil {
-				return nil, err
-			}
-			conf.TodayFolders[267116] = issue.GetNumber()
-			err = s.saveConfig(ctx, conf)
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
 	if conf.GetTodayFolders()[242018] == 0 {
 
 		ulcount, err := s.getUnlistenedCDs(ctx)
@@ -204,6 +184,7 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 	//s.CtxLog(ctx,fmt.Sprintf("ADDED the MAP: %v (%v)", time.Since(time.Unix(val, 0)), time.Unix(val, 0)))
 	if !ok || time.Since(time.Unix(val, 0)) > time.Hour*24 ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_7_INCH") ||
+		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_TAPE") ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_CD") ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_DIGITAL") ||
 		(time.Since(time.Unix(val, 0)) > time.Minute && req.GetType() == "FILE_12_INCH") {
@@ -255,11 +236,11 @@ func (s *Server) ProcAdded(ctx context.Context, req *pb.ProcAddedRequest) (*pb.P
 			if err != nil {
 				return nil, err
 			}
-			val = time.Now().Add(time.Hour).Unix()
+			val = time.Now().Add(time.Minute).Unix()
 		}
 
 		if len(recs) <= 1 {
-			val = time.Now().Add(time.Hour).Unix()
+			val = time.Now().Add(time.Minute).Unix()
 		}
 
 		runTime := val
