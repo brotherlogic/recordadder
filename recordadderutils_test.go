@@ -28,14 +28,14 @@ func (p *testBudget) getBudget(ctx context.Context) (*rbpb.GetBudgetResponse, er
 	return &rbpb.GetBudgetResponse{Spends: 100, Budget: 200}, nil
 }
 
-func (p *testCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) (int32, error) {
+func (p *testCollection) addRecord(ctx context.Context, r *pb.AddRecordRequest) (int64, error) {
 	if p.fail {
 		return -1, fmt.Errorf("Built to fail")
 	}
 	p.addedRecord = &pbrc.Record{Release: &pbgd.Release{Id: r.Id}}
 	return 123, nil
 }
-func (p *testCollection) getRecord(ctx context.Context, id int32) (*pbrc.Record, error) {
+func (p *testCollection) getRecord(ctx context.Context, id int64) (*pbrc.Record, error) {
 	return &pbrc.Record{}, nil
 }
 
